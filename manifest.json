@@ -9,9 +9,13 @@
     "default_popup": "popup.html"
   },
   
+  "background": {
+	"scripts": ["scripts/background.js"],
+	"persistent": false
+  },
+  
   "permissions": [
-    "activeTab",
 	"notifications",
-    "https://ajax.googleapis.com/"
+	"alarms"
   ]
 }
