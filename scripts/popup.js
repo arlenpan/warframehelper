@@ -1,23 +1,14 @@
-var count = 0;
-
+//initial functions
 $(document).ready(function() {
-	
 	//jquery objects
 	$("button").click(function() {
 		$("#alerts-container").slideToggle();
 	});
 	
-	//initialize rss pull
-	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.1});
+	//initialize set of data
+	rssPull();
 	
-	//message listener
-	chrome.runtime.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			console.log("msg received");
-			if (request.message == "inc") {
-				count++;
-				$(counter).text(count);
-			}
-		}
-	)
+	/*
+	//start RSS pull loop if not started
+	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.1});*/
 });

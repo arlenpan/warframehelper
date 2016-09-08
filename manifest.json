@@ -10,12 +10,20 @@
   },
   
   "background": {
-	"scripts": ["scripts/background.js"],
+	"scripts": ["scripts/jquery.js", "scripts/background.js"],
 	"persistent": false
   },
   
+  "content_scripts": [
+	{
+		"matches": ["<all_urls>"],
+		"js": ["scripts/jquery.js"]
+	}
+  ],
+  
   "permissions": [
 	"notifications",
-	"alarms"
+	"alarms",
+	"storage"
   ]
 }
