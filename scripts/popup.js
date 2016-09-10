@@ -6,7 +6,7 @@ $(document).ready(function() {
 	});
 	
 	//initialize set of data
-	rssPull();
+	chrome.extension.sendRequest({ msg: "rssPull" });
 	
 	/*
 	//start RSS pull loop if not started
