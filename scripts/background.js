@@ -1,11 +1,11 @@
 //on installation, fire polling alarm
 chrome.runtime.onInstalled.addListener(function(details) {
-	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.2});
+	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
 });
 
 //on startup, fire polling alarm
 chrome.runtime.onStartup.addListener(function(details) {
-	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.2});
+	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
 });
 
 //alarm listener

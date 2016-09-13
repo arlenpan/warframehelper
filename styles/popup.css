@@ -3,7 +3,23 @@ body {
 	font-size: 100%;
 }
 
-#alerts {
+td {
+	border: 1px solid lightgrey;
+	padding: 2px;
+}
+
+table {
+	width: 100%;
+	border: 1px solid lightgrey;
+	border-radius: 5px;
+	font-size: 80%;
+}
+
+.firstcell {
+	width: 15%;
+}
+
+#alerts, #invasions {
 	width: 500px;
 	padding: 10px;
 }
