@@ -1,9 +1,12 @@
 //initial functions
 $(document).ready(function() {
 	//jquery objects
-	$("button").click(function() {
-		$("#alerts-table").slideToggle();
-		$("#invasions-table").slideToggle();
+	$("#alerts-toggle").click(function() {
+		$("#alerts-container").slideToggle();
+	});
+
+	$("#invasions-toggle").click(function() {
+		$("#invasions-container").slideToggle();
 	});
 	
 	//initialize set of data
@@ -19,17 +22,8 @@ function updateData() {
 
 		for (var i in data) {
 			if (data[i].author === "Alert") {
-				//add new entrys to alert container
-				$("#alerts-table").append(
-					"<tr>"
-					+ "<td class=\"firstcell\">" + data[i].author + "</td>"
-					+ "<td colspan=\"2\">" + data[i].title + "</td>"
-					+ "</tr>"
-					+ "<tr>" 
-					+ "<td class=\"firstcell\">" + data[i].faction + "</td>"
-					+ "<td>" + data[i].description + "</td>"
-					+ "<td>" + data[i].expiry + "</td>"
-					+ "</tr>");
+				parseDate(data[i]);
+				createAlert(data[i]);
 			} else {
 				//add new entrys to alert container
 				$("#invasions-table").append(
@@ -41,3 +35,22 @@ function updateData() {
 		}
 	});
 };
+
+function parseDate(data) {
+	targdate = data.expiry;
+	console.log(targdate);
+}
+
+function createAlert(data) {
+	//add new entrys to alert container
+				$("#alerts-table").append(
+					"<tr>"
+					+ "<td>" + data.author + "</td>"
+					+ "<td colspan=\"2\">" + data.title + "</td>"
+					+ "</tr>"
+					+ "<tr>" 
+					+ "<td>" + data.faction + "</td>"
+					+ "<td>" + data.description + "</td>"
+					+ "<td>" + data.expiry + "</td>"
+					+ "</tr>");
+}

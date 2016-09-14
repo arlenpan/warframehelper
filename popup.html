@@ -5,21 +5,39 @@
     <title>Warframe Helper</title>
 	<script src="scripts/jquery.js"></script>
     <script src="scripts/popup.js"></script>
-	<link rel="stylesheet" href="styles/popup.css" />
+	<link rel="stylesheet" href="styles/popup.css">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	
   </head>
   <body>
-  
+
+  	<div id="header">
+  	</div>
+
 	<div id="alerts">
 		<div id="alerts-header">
-			<button id="button">Toggle</button>
+			<h3>Alerts</h3>
+			<button id="alerts-toggle">Toggle</button>
 		</div>
-		
+
+		<hr class="style1">
+
+		<div id="alerts-container">
 		<table id="alerts-table"></table>
+		</div>
 	</div>
-	
+
 	<div id="invasions">
+		<div id="invasions-header">
+			<h3>Invasions</h3>
+			<button id="invasions-toggle">Toggle</button>
+		</div>
+
+		<hr class="style1">
+
+		<div id="invasions-container">
 		<table id="invasions-table"></table>
+		</div>
 	</div>
   
 	<div id="itemsearch">
