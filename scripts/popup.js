@@ -8,7 +8,8 @@ $(document).ready(function() {
 	$("#invasions-toggle").click(function() {
 		$("#invasions-container").slideToggle();
 	});
-	
+
+
 	//initialize set of data
 	chrome.runtime.sendMessage({ msg: "rssPull" });
 	
