@@ -23,35 +23,50 @@ function updateData() {
 
 		for (var i in data) {
 			if (data[i].author === "Alert") {
-				parseDate(data[i]);
+				parseAlertData(data[i]);
 				createAlert(data[i]);
 			} else {
 				//add new entrys to alert container
-				$("#invasions-table").append(
-					"<tr>"
-					+ "<td class=\"firstcell\">" + data[i].author + "</td>"
-					+ "<td colspan=\"2\">" + data[i].title + "</td>"
-					+ "</tr>");
+				parseInvasionData(data[i]);
+				createInvasion(data[i]);
 			}
 		}
 	});
 };
 
-function parseDate(data) {
-	targdate = data.expiry;
-	console.log(targdate);
+function parseAlertData(data) {
+	//parse title
+	var titleArray = data.title.split(" - ");
+	data.reward = titleArray[0];
+	data.credits = titleArray[1];
+	data.planet = titleArray[2];
+	data.length = titleArray[3];
+
+	data.faction = data.faction.substring(3);
+	
+
+
 }
 
 function createAlert(data) {
-	//add new entrys to alert container
-				$("#alerts-table").append(
-					"<tr>"
-					+ "<td>" + data.author + "</td>"
-					+ "<td colspan=\"2\">" + data.title + "</td>"
-					+ "</tr>"
-					+ "<tr>" 
-					+ "<td>" + data.faction + "</td>"
-					+ "<td>" + data.description + "</td>"
-					+ "<td>" + data.expiry + "</td>"
-					+ "</tr>");
+	$("#alerts-container").append(
+		"<div class=\"alert-item\">"
+		+ "<p><b>" + data.reward + " & " + data.credits + "</b>"
+		+ ": " + data.description + " (" + data.faction + ")" + "</p>"
+		+ "<p>" + data.expiry + "</p>"
+		+ "</div>"
+		);
+}
+
+function parseInvasionData(data) {
+
+}
+
+function createInvasion(data) {
+	$("#invasions-container").append(
+		"<div class=\"invasions-item\">"
+		+ "<p>" + data.author + "</p>"
+		+ "<p>" + data.title + "</p>"
+		+ "</div>"
+	);
 }

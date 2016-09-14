@@ -77,7 +77,7 @@ function dataCompare() {
 				console.log(oldData[i].guid);
 			}
 			
-				console.log(Object.keys(oldData).length);*/
+			console.log(Object.keys(oldData).length);*/
 
 			//compare RSS changes
 			if (arraycmp(oldData, currData)) {
