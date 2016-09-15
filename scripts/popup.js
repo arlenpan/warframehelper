@@ -29,10 +29,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#header-image").click(function() {
-		refresh();
-	});
-
 	//search bar handlers
 	$("#submit-button").click(function() {
 		searchEvent()
@@ -62,13 +58,13 @@ $(document).ready(function() {
 
 	//notifications-toggle listeners
 	$("#notifications-toggle-on").click(function() {
-		chrome.storage.sync.set({notificationsoff : false});
+		chrome.storage.sync.set({"notificationsoff" : false});
 		$("#notifications-toggle-off").show();
 		$("#notifications-toggle-on").hide();
 	});
 
 	$("#notifications-toggle-off").click(function() {
-		chrome.storage.sync.set({notificationsoff : true});
+		chrome.storage.sync.set({"notificationsoff" : true});
 		$("#notifications-toggle-off").hide();
 		$("#notifications-toggle-on").show();
 	});

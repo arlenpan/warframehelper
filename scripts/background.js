@@ -99,9 +99,9 @@ function dataCompare() {
 				chrome.storage.sync.get("notificationsoff", function(items) {
 					console.log(items.notificationsoff);
 					if (items.notificationsoff) {
-						sendNotification();
-					} else {
 						console.log("notifications off: nothing will be sent");
+					} else {
+						sendNotification();
 					}
 				});
 			}
