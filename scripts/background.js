@@ -57,7 +57,6 @@ function rssPull() {
 		for (var i in dataSet) {
 			if (dataSet[i].author == "Alert") {
 				parseAlertData(dataSet[i]);
-				console.log(dataSet[i]);
 			} else {
 				parseInvasionData(dataSet[i]);
 			}
@@ -65,6 +64,7 @@ function rssPull() {
 		
 		//put new values in local storage
 		chrome.storage.local.set({"dataSet" : dataSet});
+
 	});
 };
 
@@ -78,7 +78,7 @@ function dataCompare() {
 		chrome.storage.local.get("dataSet", function(items) {
 			currData = items.dataSet;
 
-			//printintg test commands
+			// test commands
 			// console.log(JSON.stringify(oldData, null, 2));
 			// console.log("====================");
 			// console.log(JSON.stringify(currData, null, 2));
@@ -86,7 +86,6 @@ function dataCompare() {
 			/* for (var i in oldData) {
 				console.log(oldData[i].guid);
 			}
-			
 			console.log(Object.keys(oldData).length);*/
 
 			//compare RSS changes
@@ -94,9 +93,17 @@ function dataCompare() {
 				console.log("RSS UNCHANGED");
 				//do nothing
 			} else {
-				console.log("RSS CHANGED");
-				sendAlert();
-				updateData();
+				console.log("RSS UPDATED");
+
+				//check if notifications turned on
+				chrome.storage.sync.get("notificationsoff", function(items) {
+					console.log(items.notificationsoff);
+					if (items.notificationsoff) {
+						sendNotification();
+					} else {
+						console.log("notifications off: nothing will be sent");
+					}
+				});
 			}
 		});
 	});
@@ -119,18 +126,23 @@ function arraycmp(array1, array2) {
 		}
 		return true;
 	} else {
-		console.log("rss count changed");
 		return false;
 	}
 }
 
 //checks for new entries and sends notification
-function sendAlert() {
-
-};
-
-//updates popup CSS on new alert
-function updateData() {
+function sendNotification() {
+	//send notifications
+	var opt = {
+			type: "basic",
+			title: "Warframe Helper",
+			message: "A new alert or invasion has been added",
+			iconUrl: "images/icon-48.png"
+	}
+	chrome.notifications.create(opt);
+	
+	//refresh data if popup is open
+	chrome.runtime.sendMessage({ msg: "refresh" });
 
 };
 
@@ -144,12 +156,6 @@ function parseAlertData(data) {
 	data.timetotal = titleArray[titleArray.length - 1];
 
 	data.faction = data.faction.substring(3);
-
-	data.timeleft = (Date.parse(data.expiry) - new Date()) / 1000;
-	data.timeleft = Math.round(data.timeleft);
-	if (data.timeleft < 0) {
-		data.timeleft = 0;
-	}
 }
 
 function parseInvasionData(data) {
@@ -157,13 +163,3 @@ function parseInvasionData(data) {
 	data.reward = titleArray[0];
 	data.planet = titleArray[1];
 }
-
-/*
-flow: 	copy old data to new
-		poll RSS -> store in new data
-		compare two RSS
-		if equal = do nothing
-		if inequal => replace with new RSS
-			find difference
-			notification with new alert
-*/

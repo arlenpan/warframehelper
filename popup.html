@@ -1,14 +1,14 @@
 <!doctype html>
 <html>
 <head>
-
 	<title>Warframe Helper</title>
 	<script src="scripts/jquery.js"></script>
 	<script src="scripts/progressbar.js"></script>
 	<script src="scripts/popup.js"></script>
+
 	<link rel="stylesheet" href="styles/popup.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" >
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -17,6 +17,13 @@
 	</div>
 
 	<div id="search">
+		<input type="text" id="searchbar" placeholder="Search the Warframe Wiki">
+		<button type="submit" id="submit-button">
+			<i class="fa fa-search"></i>
+		</button>
+	</div>
+
+	<div id="itemsearch">
 	</div>
 
 	<div id="alerts">
@@ -53,11 +60,11 @@
 		</div>
 	</div>
 
-	<div id="itemsearch">
-	</div>
-	
 	<div id="footer">
-		*Note: times may not be accurate to the second.
+		<p> Note: times may not be accurate to the second. </p>
+		<p> WARFRAME Digital Extremes &copy; 2012-2016 </p>
+		<p id="notifications-toggle-on">Click to turn on notifications</p>
+		<p id="notifications-toggle-off">Click to turn off notifications</p>
 	</div>
 
 </body>

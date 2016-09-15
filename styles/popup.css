@@ -4,27 +4,13 @@ body {
 	width: 400px;
 }
 
-
-table {
-	margin: 5px;
-	border: 1px solid lightgrey;
-	border-radius: 5px;
-	font-size: 80%;
-}
-
-td {
-	border: 1px solid lightgrey;
-	padding: 2px;
-}
-
 h3 {
 	display: inline;
-	text-align: center;
 }
 
 p {
 	line-height: 100%;
-	margin: 2px;
+	margin: 3px;
 }
 
 hr {
@@ -35,6 +21,24 @@ hr {
 
 /*containers*/
 
+#alerts, #invasions, #links {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
+	box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
+}
+
+#alerts-header, #invasions-header {
+	overflow: hidden;
+	padding-top: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	display: flex;
+}
+
 .left-header {
 	flex: 0 0 80%;
 }
@@ -43,6 +47,10 @@ hr {
 	text-align: right;
 	padding-top: 5px;
 	flex: 1;
+}
+
+#alerts-container, #invasions-container {
+	padding-bottom: 5px;
 }
 
 .alert-item {
@@ -94,25 +102,53 @@ hr {
 	font-weight: bold;
 }
 
-#alerts-header, #invasions-header {
-	overflow: hidden;
-	padding-top: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
+#footer {
+	text-align: center;
+	font-size: 70%;
+}
+
+#notifications-toggle-on, #notifications-toggle-off {
+	font-weight: bold;
+}
+
+/* searchbar */
+
+#search {
 	display: flex;
-}
-
-#alerts-container, #invasions-container {
-	padding-bottom: 5px;
-}
-
-#alerts, #invasions {
 	margin-top: 10px;
-	border-radius: 5px;
+}
 
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
-	box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
+input[type='text'] {
+	flex: 90%;
+	font-family: sans-serif;
+	appearance: none;
+	box-shadow: none;
+	border-radius: none;
+
+	padding: 5px;
+	border: solid 2px #c9c9c9;
+	transition: border 0.5s;
+}
+
+input[type='text']:focus {
+	border: solid 2px #969696;
+	outline: none;
+}
+
+button[type='submit'] {
+	flex: 1;
+	border: none;
+	background-color: #c9c9c9;
+	color: white;
+	transition: background-color 0.5s;
+}
+
+button[type='submit']:hover {
+	background-color: #969696;
+}
+
+button[type='submit']:focus {
+	outline: none;
 }
 
 /*images*/
@@ -138,7 +174,7 @@ hr {
 
 ::-webkit-scrollbar {
     height: 12px;
-	width: 3px;
+	width: 5px;
 	background: white;
     }
 
