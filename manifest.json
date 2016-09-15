@@ -28,8 +28,8 @@
   },
   
   "permissions": [
-	"notifications",
-	"alarms",
-	"storage"
+	 "notifications",
+	 "alarms",
+	 "storage"
   ]
 }
