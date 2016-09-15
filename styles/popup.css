@@ -45,7 +45,8 @@ hr {
 	flex: 1;
 }
 
-.alert-item, .invasions-item {
+.alert-item {
+	display: flex;
 	background-color: lightblue;
 	border-radius: 25px;
 
@@ -57,6 +58,40 @@ hr {
 	padding-bottom: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+.invasions-item {
+	background-color: lightblue;
+	border-radius: 25px;
+
+	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.left-item {
+	flex: 1;
+}
+
+.right-item {
+	border-radius: 100%;
+	background-color: white;
+	height: 50px;
+	width: 50px;
+}
+
+.timer-item {
+	display: block;
+	margin: auto;
+}
+
+.progressbar-text {
+	font-weight: bold;
 }
 
 #alerts-header, #invasions-header {
@@ -82,6 +117,17 @@ hr {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#alerts-toggle, #invasions-toggle {
+	-webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
 }
 
 /*scrollbar*/

@@ -8,7 +8,7 @@ chrome.runtime.onStartup.addListener(function(details) {
 	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
 });
 
-//alarm listener
+//alarm call
 chrome.alarms.onAlarm.addListener(function(alarm) {
 	rssPull();
 	dataCompare();
@@ -52,6 +52,16 @@ function rssPull() {
 				console.log("get data error");
 			}
 		});
+
+		//parse new data
+		for (var i in dataSet) {
+			if (dataSet[i].author == "Alert") {
+				parseAlertData(dataSet[i]);
+				console.log(dataSet[i]);
+			} else {
+				parseInvasionData(dataSet[i]);
+			}
+		}
 		
 		//put new values in local storage
 		chrome.storage.local.set({"dataSet" : dataSet});
@@ -123,6 +133,30 @@ function sendAlert() {
 function updateData() {
 
 };
+
+function parseAlertData(data) {
+	//parse title
+	var titleArray = data.title.split(" - ");
+
+	data.reward = titleArray[titleArray.length - 4];
+	data.credits = titleArray[titleArray.length -3];
+	data.planet = titleArray[titleArray.length - 2];
+	data.timetotal = titleArray[titleArray.length - 1];
+
+	data.faction = data.faction.substring(3);
+
+	data.timeleft = (Date.parse(data.expiry) - new Date()) / 1000;
+	data.timeleft = Math.round(data.timeleft);
+	if (data.timeleft < 0) {
+		data.timeleft = 0;
+	}
+}
+
+function parseInvasionData(data) {
+	var titleArray = data.title.split(" - ");
+	data.reward = titleArray[0];
+	data.planet = titleArray[1];
+}
 
 /*
 flow: 	copy old data to new
