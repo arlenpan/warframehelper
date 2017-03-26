@@ -1,72 +1,17 @@
 //initial functions
 $(document).ready(function() {
-
-	//message listener from background
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.msg == "refresh") {
-			refresh();
-		}
-	});
-
-	//toggle handlers
-	$("#alerts-toggle").click(function() {
-		$("#alerts-container").slideToggle();
-		//spin animation
-		if ( $(this).css("transform") == 'none' ) {
-			$(this)	.css("transform", "rotate(90deg)");
-		} else {
-			$(this).css("transform", "");
-		}
-	});
-
-	$("#invasions-toggle").click(function() {
-		$("#invasions-container").slideToggle();
-		//spin animation
-		if ( $(this).css("transform") == 'none' ) {
-			$(this)	.css("transform", "rotate(90deg)");
-		} else {
-			$(this).css("transform", "");
-		}
-	});
-
 	//search bar handlers
-	$("#submit-button").click(function() {
-		searchEvent()
+	$("#search-button").click(function() {
+		searchEvent();
 	});
 	$("#searchbar").keyup(function(e) {
-		if (e.keyCode == 13) {
-			searchEvent();
-		}
+		if (e.keyCode == 13) {searchEvent();}
 	});
 	$("#searchbar").focus(function() {
-		$("#submit-button").css("background-color", "#969696");
+		$("#search-button").css("background-color", "#969696");
 	});
 	$("#searchbar").focusout(function() {
-		$("#submit-button").css("background-color", "#c9c9c9");
-	});
-
-	//notifications-toggle
-	chrome.storage.sync.get("notificationsoff", function(items) {
-		if (items.notificationsoff) {
-			$("#notifications-toggle-on").show();
-			$("#notifications-toggle-off").hide();
-		} else {
-			$("#notifications-toggle-off").show();
-			$("#notifications-toggle-on").hide();
-		}
-	});
-
-	//notifications-toggle listeners
-	$("#notifications-toggle-on").click(function() {
-		chrome.storage.sync.set({"notificationsoff" : false});
-		$("#notifications-toggle-off").show();
-		$("#notifications-toggle-on").hide();
-	});
-
-	$("#notifications-toggle-off").click(function() {
-		chrome.storage.sync.set({"notificationsoff" : true});
-		$("#notifications-toggle-off").hide();
-		$("#notifications-toggle-on").show();
+		$("#search-button").css("background-color", "#c9c9c9");
 	});
 
 	//initialize set of data
@@ -81,7 +26,7 @@ function searchEvent() {
 
 //pulls new data from RSS and displays it
 function refresh() {
-	chrome.runtime.sendMessage({ msg: "rssPull" });
+	chrome.runtime.sendMessage({ msg: "rssPoll" });
 	$("#alerts-container").empty();
 	$("#invasions-container").empty();
 	updateData();

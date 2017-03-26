@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Warframe Helper",
-  "version": "1.0",
+  "version": "2.0",
   "description": "This extension provides alerts and tools for Warframe.",
 
   "browser_action": {
@@ -10,16 +10,9 @@
   },
   
   "background": {
-	"scripts": ["scripts/jquery.js", "scripts/background.js"],
-	"persistent": false
+	  "scripts": ["scripts/zepto.js", "scripts/background.js"],
+	  "persistent": false
   },
-  
-  "content_scripts": [
-	{
-		"matches": ["<all_urls>"],
-		"js": ["scripts/jquery.js"]
-	}
-  ],
 
   "icons": {
     "16" : "images/icon-16.png",
@@ -28,8 +21,9 @@
   },
   
   "permissions": [
-	 "notifications",
-	 "alarms",
-	 "storage"
+    "http://content.warframe.com/*",
+	  "notifications",
+	  "alarms",
+	  "storage"
   ]
 }

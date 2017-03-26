@@ -1,165 +1,120 @@
-//on installation, fire polling alarm
-chrome.runtime.onInstalled.addListener(function(details) {
-	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
-});
-
-//on startup, fire polling alarm
-chrome.runtime.onStartup.addListener(function(details) {
-	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
-});
-
-//alarm call
+//alarm listener
 chrome.alarms.onAlarm.addListener(function(alarm) {
-	rssPull();
-	dataCompare();
+	if (alarm.name == "rssAlarm") {
+		rssPoll();
+	}
 });
 
-//message listener from popup
+//message listener (from popup)
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request.msg == "rssPull") {
-		rssPull();
+	if (request.msg == "rssPoll") {
+		rssPoll();
 	}
 });
 
-//uses JQuery's HTTP GET request to pull info from RSS feed and stores to local data
-//requires JQuery inclusion in content scripts
-function rssPull() {
-	$.get("http://content.warframe.com/dynamic/rss.php", function(data) {
-		//data processing called once successfull RSS pull
-		//dataSet is array of JSON objects
-		var dataSet = [];
-		
-		$(data).find("item").each(function() {	
-			var el = $(this);
-			
-			dataSet.push({
-				guid: el.find("guid").text(),
-				title: el.find("title").text(),
-				author: el.find("author").text(),
-				description: el.find("description").text(),
-				pubDate: el.find("pubDate").text(),
-				faction: el.find("faction").text(),
-				expiry: el.find("expiry").text()
-			});			
-		});
-		
-		//move old data for comparison
-		chrome.storage.local.get("dataSet", function(items) {
-			if (!chrome.runtime.error) {
-				var oldDataSet = items.dataSet;
-				chrome.storage.local.set({"oldDataSet" : oldDataSet});
-			} else {
-				console.log("get data error");
-			}
-		});
+//uses zepto's HTTP GET request to pull info from RSS feed and stores to local data
+function rssPoll() {
+	$.ajax({
+		url: "http://content.warframe.com/dynamic/rss.php",
+		dataType: "xml",
+		success: function(data) {
+			updateData(data);
+		},
+		error: function(xhr, errorType, error) {
+			console.log("GET request error!");
+		}
+	});
+}
 
-		//parse new data
-		for (var i in dataSet) {
-			if (dataSet[i].author == "Alert") {
-				parseAlertData(dataSet[i]);
+var updateData = function(data) {
+	var newData = parseData(data);
+	console.log("poll:", newData);
+
+	chrome.storage.local.get("data", function(items) {
+		if (!chrome.runtime.error) {
+			var oldData = items.data;
+			if (dataCompare(newData, oldData)) {
+				sendNotification();
+				chrome.storage.local.set({"data" : newData});
 			} else {
-				parseInvasionData(dataSet[i]);
+				console.log("same data!");
+			}
+		} else {
+			console.log("chrome get data failed!");
+		}
+	});
+
+}
+
+// parse XML input from polling into data items
+function parseData(data) {
+	var obj = [];
+
+	// parse XML
+	if (data.hasChildNodes()) {
+		var channel = data.firstChild.childNodes.item(1);
+		for (var i=0; i < channel.childNodes.length; i++) {
+			var item = channel.childNodes.item(i);
+			var itemObj = {};
+			if (item.nodeName == "item") {
+				for (var j=0; j < item.childNodes.length; j++) {
+					itemObj[item.childNodes.item(j).nodeName] = item.childNodes.item(j).innerHTML;
+				}
+				obj.push(itemObj);
 			}
 		}
-		
-		//put new values in local storage
-		chrome.storage.local.set({"dataSet" : dataSet});
-
-	});
-};
-
-//pulls old and new data to compare and update current data
-function dataCompare() {
-	var oldData, currData;
+	}
 	
-	chrome.storage.local.get("oldDataSet", function(items) {
-		oldData = items.oldDataSet;
-
-		chrome.storage.local.get("dataSet", function(items) {
-			currData = items.dataSet;
-
-			// test commands
-			// console.log(JSON.stringify(oldData, null, 2));
-			// console.log("====================");
-			// console.log(JSON.stringify(currData, null, 2));
-			// console.log("test: " + (oldData[1].guid == currData[2].guid));
-			/* for (var i in oldData) {
-				console.log(oldData[i].guid);
-			}
-			console.log(Object.keys(oldData).length);*/
-
-			//compare RSS changes
-			if (arraycmp(oldData, currData)) {
-				console.log("RSS UNCHANGED");
-				//do nothing
-			} else {
-				console.log("RSS UPDATED");
-
-				//check if notifications turned on
-				chrome.storage.sync.get("notificationsoff", function(items) {
-					console.log(items.notificationsoff);
-					if (items.notificationsoff) {
-						console.log("notifications off: nothing will be sent");
-					} else {
-						sendNotification();
-					}
-				});
-			}
-		});
-	});
-};
-
-//compares two arrays, scanning through all GUIDs for identical contents
-function arraycmp(array1, array2) {
-	var lengtheq = Object.keys(array1).length == Object.keys(array2).length;
-	var elementeq = array1.every(function(element, index) {
-		return element === array2[index];
-	});
-
-	if (lengtheq) {
-		for (var i in array1) {
-			if (array1[i].guid != array2[i].guid) {
-				console.log(array1[i].guid);
-				console.log(array2[i].guid);
-				return false;
-			}
+	// parse titles
+	for (var i=0; i < obj.length; i++) {
+		var titleArray = obj[i].title.split(" - ");
+		if (obj[i].author == "Alert") {
+			if (titleArray.length == 4)
+				obj[i].reward = titleArray[titleArray.length - 4];
+			obj[i].credits = titleArray[titleArray.length - 3];
+			obj[i].planet = titleArray[titleArray.length - 2];
+			obj[i].timetotal = titleArray[titleArray.length - 1];
+		} else {
+			obj[i].reward = titleArray[0];
+			obj[i].planet = titleArray[1];
 		}
+	}
+
+	return obj;
+}
+
+// pulls old and new data to compare and update current data
+// returns TRUE if different, FALSE if same
+function dataCompare(newData, oldData) {
+	if (newData.length != oldData.length) {
 		return true;
-	} else {
-		return false;
 	}
-}
 
-//checks for new entries and sends notification
-function sendNotification() {
-	//send notifications
-	var opt = {
-			type: "basic",
-			title: "Warframe Helper",
-			message: "A new alert or invasion has been added",
-			iconUrl: "images/icon-48.png"
+	for (var i=0; i < newData.length; i++) {
+		if (newData[i].guid != oldData[i].guid) {
+			return true;
+		}
 	}
-	chrome.notifications.create(opt);
-	
-	//refresh data if popup is open
-	chrome.runtime.sendMessage({ msg: "refresh" });
 
+	return false;
 };
 
-function parseAlertData(data) {
-	//parse title
-	var titleArray = data.title.split(" - ");
+//checks if notifications turned on and sends notification
+function sendNotification() {
+	chrome.storage.sync.get("notificationsDisabled", function(items) {
+		if (items.notificationsDisabled) {
+			console.log("notifications disabled!");
+		} else {
+			var opt = {
+					type: "basic",
+					title: "Warframe Helper",
+					message: "ALERTS CHANGED",
+					iconUrl: "images/icon-48.png"
+			}
+			chrome.notifications.create(opt);
+		}
+	});
+};
 
-	data.reward = titleArray[titleArray.length - 4];
-	data.credits = titleArray[titleArray.length -3];
-	data.planet = titleArray[titleArray.length - 2];
-	data.timetotal = titleArray[titleArray.length - 1];
 
-	data.faction = data.faction.substring(3);
-}
 
-function parseInvasionData(data) {
-	var titleArray = data.title.split(" - ");
-	data.reward = titleArray[0];
-	data.planet = titleArray[1];
-}

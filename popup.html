@@ -2,9 +2,6 @@
 <html>
 <head>
 	<title>Warframe Helper</title>
-	<script src="scripts/jquery.js"></script>
-	<script src="scripts/progressbar.js"></script>
-	<script src="scripts/popup.js"></script>
 
 	<link rel="stylesheet" href="styles/popup.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" >
@@ -12,21 +9,18 @@
 </head>
 <body>
 
-	<div id="header">
+	<header id="header">
 		<img id="header-image" src="/images/header.png">
-	</div>
+	</header>
 
-	<div id="search">
+	<section id="search">
 		<input type="text" id="searchbar" placeholder="Search the Warframe Wiki">
-		<button type="submit" id="submit-button">
+		<button type="submit" id="search-button">
 			<i class="fa fa-search"></i>
 		</button>
-	</div>
+	</section>
 
-	<div id="itemsearch">
-	</div>
-
-	<div id="alerts">
+	<section id="alerts">
 		<div id="alerts-header">
 			<div class="left-header">
 				<h3>Alerts</h3>
@@ -41,9 +35,9 @@
 
 		<div id="alerts-container">
 		</div>
-	</div>
+	</section>
 
-	<div id="invasions">
+	<section id="invasions">
 		<div id="invasions-header">
 			<div class="left-header">
 				<h3>Invasions</h3>
@@ -58,15 +52,15 @@
 
 		<div id="invasions-container">
 		</div>
-	</div>
+	</section>
 
-	<div id="footer">
-		<p> Note: times may not be accurate to the second. </p>
-		<p> WARFRAME Digital Extremes &copy; 2012-2016 </p>
-		<p id="notifications-toggle-on">Notifications OFF: Click to turn on</p>
-		<p id="notifications-toggle-off">Notifications ON: Click to turn off</p>
-	</div>
+	<footer id="footer">
+		<p> WARFRAME Digital Extremes &copy; 2012-2017 </p>
+	</footer>
 
+	<script src="scripts/zepto.js"></script>
+	<script src="scripts/progressbar.js"></script>
+	<script src="scripts/popup.js"></script>
 </body>
 </html>
 
