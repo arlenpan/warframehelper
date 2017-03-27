@@ -53,7 +53,7 @@ hr {
 	padding-bottom: 5px;
 }
 
-.alert-item {
+.item-alert {
 	display: flex;
 	background-color: lightblue;
 	border-radius: 25px;
@@ -68,7 +68,7 @@ hr {
 	padding-right: 10px;
 }
 
-.invasions-item {
+.item-invasion {
 	background-color: lightblue;
 	border-radius: 25px;
 

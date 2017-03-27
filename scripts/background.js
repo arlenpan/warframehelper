@@ -26,7 +26,7 @@ function rssPoll() {
 	});
 }
 
-var updateData = function(data) {
+function updateData(data) {
 	var newData = parseData(data);
 	console.log("poll:", newData);
 
@@ -43,7 +43,6 @@ var updateData = function(data) {
 			console.log("chrome get data failed!");
 		}
 	});
-
 }
 
 // parse XML input from polling into data items
@@ -58,7 +57,16 @@ function parseData(data) {
 			var itemObj = {};
 			if (item.nodeName == "item") {
 				for (var j=0; j < item.childNodes.length; j++) {
-					itemObj[item.childNodes.item(j).nodeName] = item.childNodes.item(j).innerHTML;
+					switch (item.childNodes.item(j).nodeName) {
+						case "wf:faction":
+							itemObj["faction"] = item.childNodes.item(j).innerHTML.substring(3);
+							break;
+						case "wf:expiry":
+							itemObj["expiry"] =  item.childNodes.item(j).innerHTML;
+							break;
+						default:
+							itemObj[item.childNodes.item(j).nodeName] = item.childNodes.item(j).innerHTML;
+					}
 				}
 				obj.push(itemObj);
 			}
@@ -86,7 +94,7 @@ function parseData(data) {
 // pulls old and new data to compare and update current data
 // returns TRUE if different, FALSE if same
 function dataCompare(newData, oldData) {
-	if (newData.length != oldData.length) {
+	if (newData.length > oldData.length) {
 		return true;
 	}
 

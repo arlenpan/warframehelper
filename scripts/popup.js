@@ -1,17 +1,31 @@
 //initial functions
 $(document).ready(function() {
+
 	//search bar handlers
 	$("#search-button").click(function() {
 		searchEvent();
 	});
-	$("#searchbar").keyup(function(e) {
+	$("#search-bar").keyup(function(e) {
 		if (e.keyCode == 13) {searchEvent();}
 	});
-	$("#searchbar").focus(function() {
+	$("#search-bar").focus(function() {
 		$("#search-button").css("background-color", "#969696");
 	});
-	$("#searchbar").focusout(function() {
+	$("#search-bar").focusout(function() {
 		$("#search-button").css("background-color", "#c9c9c9");
+	});
+
+	// storage listener (refresh view on changes!)
+	chrome.storage.onChanged.addListener(function(changes, namespace) {
+		for (key in changes) {
+			var storageChange = changes[key];
+          	console.log('Storage key "%s" in namespace "%s" changed. ' +
+              'Old value was "%s", new value is "%s".',
+              key,
+              namespace,
+              storageChange.oldValue,
+              storageChange.newValue);
+		}
 	});
 
 	//initialize set of data
@@ -19,7 +33,7 @@ $(document).ready(function() {
 });
 
 function searchEvent() {
-	var inputtext = $("#searchbar").val();
+	var inputtext = $("#search-bar").val();
 	var URL = "http://warframe.wikia.com/wiki/Special:Search?search=" + inputtext + "&fulltext=Search"
 	chrome.tabs.create({url: URL});	
 }
@@ -27,17 +41,17 @@ function searchEvent() {
 //pulls new data from RSS and displays it
 function refresh() {
 	chrome.runtime.sendMessage({ msg: "rssPoll" });
-	$("#alerts-container").empty();
-	$("#invasions-container").empty();
-	updateData();
+	updateView();
 }
 
 //pulls stored local data and outputs to popup
-function updateData() {
-	chrome.storage.local.get("dataSet", function(items) {
-		data = items.dataSet;
-
-		for (var i in data) {
+function updateView() {
+	$("#alerts-container").empty();
+	$("#invasions-container").empty();
+	chrome.storage.local.get("data", function(items) {
+		data = items.data;
+		console.log("updatedata: ", data);
+		for (var i=0; i < data.length; i++) {
 			if (data[i].author === "Alert") {
 				if ((Date.parse(data[i].expiry) - new Date()) > 0) {
 					createAlert(data[i]);
@@ -49,30 +63,34 @@ function updateData() {
 	});
 };
 
-function createAlert(data) {
-	//manage reward string
-	if (data.reward) {
-		var rewardstring = data.reward + " & " + data.credits
-	} else {
-		var rewardstring = data.credits;
-	}
+function createAlert(item) {
+	var rewardstring = (item.reward) ? item.reward + " & " + item.credits : item.credits;
 
 	//create data display
-	$("#alerts-container").append(
-		"<div class=\"alert-item\" id=\"item-" + data.guid + "\">"
-		+ "<div class=\"left-item\">"
-		+ "<p><b>" + rewardstring + "</b>"
-		+ ": " + data.planet + "</p>"
-		+ "<p>" + data.description + " (" + data.faction + ")" + "</p>"
-		+ "</div>"
-		+ "<div class=\"right-item\" id=\"right-item-" + data.guid + "\">"
-		+ "<p class=\"timer-item\" id=\"timer-" + data.guid + "\">" + "</p>"
-		+ "</div>"
-		+ "</div>"
-	);
+	$("#container-alerts").append(`
+		<div class="item-alert">
+			<div class="left-item">
+				<p><b>${rewardstring}</b>: ${item.planet}</p>
+				<p>${item.description} (${item.faction})</p>
+			</div>
+			<div class="right-item">
+				<p>${item.expiry}</p>
+			</div>
+		</div>
+	`);
 
+	// "<div class=\"alert-item\" id=\"item-" + data.guid + "\">"
+	// + "<div class=\"left-item\">"
+	// + "<p><b>" + rewardstring + "</b>"
+	// + ": " + data.planet + "</p>"
+	// + "<p>" + data.description + " (" + data.faction + ")" + "</p>"
+	// + "</div>"
+	// + "<div class=\"right-item\" id=\"right-item-" + data.guid + "\">"
+	// + "<p class=\"timer-item\" id=\"timer-" + data.guid + "\">" + "</p>"
+	// + "</div>"
+	// + "</div>"
 	//setup timer objects
-	startTimer(data);
+	// startTimer(data);
 }
 
 function startTimer(data) {
@@ -114,11 +132,11 @@ function startTimer(data) {
 	}, 1000);
 }
 
-function createInvasion(data) {
-	$("#invasions-container").append(
-		"<div class=\"invasions-item\">"
-		+ "<p><b>" + data.reward + "</b>" + "</p>"
-		+ "<p>" + data.planet + " - " + data.author + "</p>"
-		+ "</div>"
-	);
+function createInvasion(item) {
+	$("#container-invasions").append(`
+		<div class="item-invasion">
+			<p><b>${item.reward}</b></p>
+			<p>${item.planet} - ${item.author}</p>
+		</div>
+	`);
 }
