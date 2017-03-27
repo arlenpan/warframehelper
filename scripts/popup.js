@@ -26,10 +26,12 @@ $(document).ready(function() {
               storageChange.oldValue,
               storageChange.newValue);
 		}
+		updateView();
 	});
 
 	//initialize set of data
-	refresh();
+	chrome.runtime.sendMessage({ msg: "rssPoll" });
+	updateView();
 });
 
 function searchEvent() {
@@ -38,16 +40,10 @@ function searchEvent() {
 	chrome.tabs.create({url: URL});	
 }
 
-//pulls new data from RSS and displays it
-function refresh() {
-	chrome.runtime.sendMessage({ msg: "rssPoll" });
-	updateView();
-}
-
 //pulls stored local data and outputs to popup
 function updateView() {
-	$("#alerts-container").empty();
-	$("#invasions-container").empty();
+	$("#container-alerts").empty();
+	$("#container-invasions").empty();
 	chrome.storage.local.get("data", function(items) {
 		data = items.data;
 		console.log("updatedata: ", data);
@@ -68,48 +64,33 @@ function createAlert(item) {
 
 	//create data display
 	$("#container-alerts").append(`
-		<div class="item-alert">
+		<div class="item-alert" id="item-${item.guid}">
 			<div class="left-item">
 				<p><b>${rewardstring}</b>: ${item.planet}</p>
 				<p>${item.description} (${item.faction})</p>
 			</div>
-			<div class="right-item">
-				<p>${item.expiry}</p>
+			<div class="right-item" id="right-item-${item.guid}">
 			</div>
 		</div>
 	`);
 
-	// "<div class=\"alert-item\" id=\"item-" + data.guid + "\">"
-	// + "<div class=\"left-item\">"
-	// + "<p><b>" + rewardstring + "</b>"
-	// + ": " + data.planet + "</p>"
-	// + "<p>" + data.description + " (" + data.faction + ")" + "</p>"
-	// + "</div>"
-	// + "<div class=\"right-item\" id=\"right-item-" + data.guid + "\">"
-	// + "<p class=\"timer-item\" id=\"timer-" + data.guid + "\">" + "</p>"
-	// + "</div>"
-	// + "</div>"
-	//setup timer objects
-	// startTimer(data);
+	startTimer(item);
 }
 
-function startTimer(data) {
-	//calculate min/secs (initialization)s
-	var id = "#timer-" + data.guid;
-
-	var timeleft = Math.round((Date.parse(data.expiry) - new Date()) / 1000);
-	var timetotal = data.timetotal.substring(0, data.timetotal.length - 1);
+function startTimer(item) {
+	//calculate min/secs (initialization)
+	var timeleft = Math.round((Date.parse(item.expiry) - new Date()) / 1000);
+	var timetotal = item.timetotal.substring(0, item.timetotal.length - 1);
 	var mins = Math.floor(timeleft / 60);
 	var secs = timeleft % 60;
-	var string = mins + "." + secs;
+	var timestr = mins + "." + secs;
 
 	//timer object
-	var timer = new ProgressBar.Circle("#right-item-" + data.guid, {
+	var timer = new ProgressBar.Circle("#right-item-" + item.guid, {
 		strokeWidth: 5,
 		fill: 'rgba(173,216,230, 0.5)',
 		text: {
-			value: string,
-			classname: 'pb' + data.guid
+			value: timestr
 		}
 	});
 
@@ -122,12 +103,12 @@ function startTimer(data) {
 			timeleft = timeleft - 1;
 			mins = Math.floor(timeleft / 60);
 			secs = timeleft % 60;
-			string = mins + "." + secs;
+			timestr = mins + "." + secs;
 
-			timer.text.innerHTML = string;
+			timer.text.innerHTML = timestr;
 			timer.animate((timetotal - mins) / timetotal);
 		} else {
-			$("#item-" + data.guid).remove();
+			$("#item-" + item.guid).remove();
 		}
 	}, 1000);
 }

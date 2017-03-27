@@ -36,8 +36,9 @@ function updateData(data) {
 			if (dataCompare(newData, oldData)) {
 				sendNotification();
 				chrome.storage.local.set({"data" : newData});
+				console.log("alerts changed!")
 			} else {
-				console.log("same data!");
+				console.log("alerts same!");
 			}
 		} else {
 			console.log("chrome get data failed!");
