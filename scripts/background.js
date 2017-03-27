@@ -33,10 +33,15 @@ function updateData(data) {
 	chrome.storage.local.get("data", function(items) {
 		if (!chrome.runtime.error) {
 			var oldData = items.data;
-			if (dataCompare(newData, oldData)) {
-				sendNotification();
+			var dataDiff = dataCompare(newData, oldData);
+			if (dataDiff != 0) {
+				console.log("dataDiff", dataDiff);
+				if (dataDiff != -1) {
+					console.log("SEND NOTIF");
+					sendNotification(dataDiff);
+				}
 				chrome.storage.local.set({"data" : newData});
-				console.log("alerts changed!")
+				console.log("alerts changed!");
 			} else {
 				console.log("alerts same!");
 			}
@@ -93,23 +98,36 @@ function parseData(data) {
 }
 
 // pulls old and new data to compare and update current data
-// returns TRUE if different, FALSE if same
+// returns -1 if item deleted from list
+// returns 0 if lists are the same
+// returns new item if item added to list
 function dataCompare(newData, oldData) {
-	if (newData.length > oldData.length) {
-		return true;
-	}
+	console.log("dataCompare newData", newData);
+	console.log("dataCompare oldData", oldData);
 
+	var diffList = {};
 	for (var i=0; i < newData.length; i++) {
-		if (newData[i].guid != oldData[i].guid) {
-			return true;
+		var inList = false;
+		for (var j=0; j < oldData.length; j++) {
+			if (newData[i].guid == oldData[j].guid) {
+				inList = true;
+			}
+		}
+		if (!inList) {
+			console.log("new element:", newData[i]);
+			return newData[i];
 		}
 	}
 
-	return false;
+	if (newData.length < oldData.length) {
+		return -1;
+	} else {
+		return 0;
+	}
 };
 
 //checks if notifications turned on and sends notification
-function sendNotification() {
+function sendNotification(newItem) {
 	chrome.storage.sync.get("notificationsDisabled", function(items) {
 		if (items.notificationsDisabled) {
 			console.log("notifications disabled!");
@@ -117,13 +135,11 @@ function sendNotification() {
 			var opt = {
 					type: "basic",
 					title: "Warframe Helper",
-					message: "ALERTS CHANGED",
+					message: `NEW ALERT: ${newItem.title} (${newItem.faction})`,
 					iconUrl: "images/icon-48.png"
 			}
 			chrome.notifications.create(opt);
+			new Audio('./assets/notif.mp3').play();
 		}
 	});
 };
-
-
-

@@ -2,12 +2,16 @@
 
 todo:
 
-fix startup bug
+Detailed Alerts
 
-click notification to open window
+Click notification to open popup
 
 PS4 sync
 
 sound
 
 specific notifications
+
+notification hiding
+
+hiding sections
