@@ -42,8 +42,8 @@ function searchEvent() {
 
 //pulls stored local data and outputs to popup
 function updateView() {
-	$("#container-alerts").empty();
-	$("#container-invasions").empty();
+	$("#list-alerts").empty();
+	$("#list-invasions").empty();
 	chrome.storage.local.get("data", function(items) {
 		data = items.data;
 		console.log("updatedata: ", data);
@@ -63,7 +63,7 @@ function createAlert(item) {
 	var rewardstring = (item.reward) ? item.reward + " & " + item.credits : item.credits;
 
 	//create data display
-	$("#container-alerts").append(`
+	$("#list-alerts").append(`
 		<div class="item-alert" id="item-${item.guid}">
 			<div class="left-item">
 				<p><b>${rewardstring}</b>: ${item.planet}</p>
@@ -114,7 +114,7 @@ function startTimer(item) {
 }
 
 function createInvasion(item) {
-	$("#container-invasions").append(`
+	$("#list-invasions").append(`
 		<div class="item-invasion">
 			<p><b>${item.reward}</b></p>
 			<p>${item.planet} - ${item.author}</p>
