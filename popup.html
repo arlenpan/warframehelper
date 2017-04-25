@@ -22,12 +22,7 @@
 
 	<section class="section-container" id="container-alerts">
 		<div class="section-header">
-			<div class="section-header-left">
-				<h3>Alerts</h3>
-			</div>
-			<div class="section-header-right">
-				<input class="toggle" id="toggle-alerts" type="image" src="/images/droparrow.png" alt="toggle">
-			</div>
+			<h3>Alerts</h3>
 		</div>
 		<hr>
 		<div class="section-list" id="list-alerts"></div>
@@ -35,19 +30,33 @@
 
 	<section class="section-container" id="container-invasions">
 		<div class="section-header">
-			<div class="section-header-left">
-				<h3>Invasions</h3>
-			</div>
-			<div class="section-header-right">
-				<input class="toggle" id="toggle-invasions" type="image" src="/images/droparrow.png" alt="toggle">
-			</div>
+			<h3>Invasions</h3>
 		</div>
 		<hr>
 		<div class="section-list" id="list-invasions"></div>
 	</section>
 
 	<footer>
-		<p> WARFRAME Digital Extremes &copy; 2012-2017 </p>
+		<div class="settings-header">
+			<p> WARFRAME Digital Extremes &copy; 2012-2017 </p>
+			<button id="btn-settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
+		</div>
+		<div id="settings-container">
+			<form id="toggle-platform">
+				<label for="toggle-pc">PC</label>
+				<input type="radio" id="toggle-pc" name="toggle-platform" value="pc"/>
+				<label for="toggle-ps4">PS4</label>
+				<input type="radio" id="toggle-ps4" name="toggle-platform" value="ps4"/>
+			</form>
+			<form>
+				<label for="toggle-sound">Sound</label>
+				<input type="checkbox" id="toggle-sound" name="toggle-sound" value="sound"/>
+			</form>
+			<form>
+				<label for="toggle-notif">Notifications</label>
+				<input type="checkbox" id="toggle-notif" name="toggle-notif" value="notif"/>
+			</form>
+		</div>
 	</footer>
 
 	<script src="scripts/zepto.js"></script>

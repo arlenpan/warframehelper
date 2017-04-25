@@ -19,6 +19,7 @@ hr {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	cursor: pointer;
 }
 
 /* searchbar */
@@ -60,25 +61,11 @@ hr {
 }
 
 .section-header {
-	overflow: hidden;
-	padding-top: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	display: flex;
+	padding: 5px 10px 0px 10px;
 }
 
 .section-header h3 {
 	display: inline;
-}
-
-.section-header-left {
-	flex: 0 0 80%;
-}
-
-.section-header-right {
-	text-align: right;
-	padding-top: 5px;
-	flex: 1;
 }
 
 .toggle {
@@ -139,9 +126,30 @@ hr {
 	font-weight: bold;
 }
 
-footer {
+.settings-header {
 	text-align: center;
 	font-size: 70%;
+	display: flex;
+	justify-content: space-between;
+}
+
+#btn-settings {
+	border: none;
+	outline: none;
+	cursor: pointer;
+	color: #969696;
+	border-radius: 2px;
+}
+
+#btn-settings:hover {
+	color: black;
+	background-color: #c9c9c9;
+}
+
+#settings-container {
+	display: none;
+	text-align: right;
+	padding-top: 1rem;
 }
 
 /*scrollbar*/

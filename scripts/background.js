@@ -1,3 +1,13 @@
+//on installation, fire polling alarm
+chrome.runtime.onInstalled.addListener(function(details) {
+	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
+});
+
+//on startup, fire polling alarm
+chrome.runtime.onStartup.addListener(function(details) {
+	chrome.alarms.create("rssAlarm", {delayInMinutes: 0.1, periodInMinutes: 0.5});
+});
+
 //alarm listener
 chrome.alarms.onAlarm.addListener(function(alarm) {
 	if (alarm.name == "rssAlarm") {
@@ -14,15 +24,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //uses zepto's HTTP GET request to pull info from RSS feed and stores to local data
 function rssPoll() {
-	$.ajax({
-		url: "http://content.warframe.com/dynamic/rss.php",
-		dataType: "xml",
-		success: function(data) {
-			updateData(data);
-		},
-		error: function(xhr, errorType, error) {
-			console.log("GET request error!");
+	chrome.storage.sync.get("rssSource", function(items) {
+		console.log("RSS SOURCE:", items.rssSource);
+		if (items.rssSource == "ps4") {
+			var rssURL = "http://content.ps4.warframe.com/dynamic/rss.php";
+		} else {
+			var rssURL = "http://content.warframe.com/dynamic/rss.php";
 		}
+		$.ajax({
+			url: rssURL,
+			dataType: "xml",
+			success: function(data) {
+				updateData(data);
+			},
+			error: function(xhr, errorType, error) {
+				console.log("GET request error!");
+			}
+		});
 	});
 }
 
@@ -105,6 +123,10 @@ function dataCompare(newData, oldData) {
 	console.log("dataCompare newData", newData);
 	console.log("dataCompare oldData", oldData);
 
+	if (oldData == undefined) {
+		return newData[0];
+	}
+
 	var diffList = {};
 	for (var i=0; i < newData.length; i++) {
 		var inList = false;
@@ -139,7 +161,13 @@ function sendNotification(newItem) {
 					iconUrl: "images/icon-48.png"
 			}
 			chrome.notifications.create(opt);
-			new Audio('./assets/notif.mp3').play();
+			chrome.storage.sync.get("soundDisabled", function(items) {
+				if (items.soundDisabled) {
+					console.log("sound disabled!");
+				} else {
+					new Audio('./assets/notif.mp3').play();
+				}
+			})
 		}
 	});
 };

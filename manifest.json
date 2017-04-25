@@ -22,6 +22,7 @@
   
   "permissions": [
     "http://content.warframe.com/*",
+    "http://content.ps4.warframe.com/*",
 	  "notifications",
 	  "alarms",
 	  "storage"

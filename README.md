@@ -1,17 +1,21 @@
 # warframehelper
 
-todo:
+### Todo
 
-Detailed Alerts
+- [x] Detailed Alerts
 
-Click notification to open popup
+- [ ] Click notification to open popup (NOT POSSIBLE)
 
-PS4 sync
+- [x] PS4 sync
 
-sound
+- [x] Sound / Toggling Sound
 
-specific notifications
+- [ ] specific notifications
 
-notification hiding
+- [x] Hiding Notifications
 
-hiding sections
+- [ ] hiding sections
+
+### interesting bugs
+
+- when system time is incorrect (ahead), alert hide/show may be incorrect

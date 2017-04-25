@@ -1,6 +1,11 @@
 //initial functions
 $(document).ready(function() {
 
+	// link image to warframe reddit
+	$("#header-image").click(function() {
+		chrome.tabs.create({url: "https://www.reddit.com/r/Warframe/"});
+	});
+
 	//search bar handlers
 	$("#search-button").click(function() {
 		searchEvent();
@@ -15,6 +20,53 @@ $(document).ready(function() {
 		$("#search-button").css("background-color", "#c9c9c9");
 	});
 
+	// setting button handlers
+	$("#btn-settings").click(function() {
+		if ($("#settings-container").css("display") == "none") {
+			$("#settings-container").show();
+			window.scrollTo(0,document.body.scrollHeight);
+		} else {
+			$("#settings-container").hide();
+		}
+	});
+
+	// assign settings on load
+	chrome.storage.sync.get("rssSource", function(items) {
+		if (items.rssSource == "ps4") {
+			$("#toggle-ps4").prop("checked", true);
+		} else {
+			$("#toggle-pc").prop("checked", true);
+		}
+	});
+	chrome.storage.sync.get("notificationsDisabled", function(items) {
+		if (!items.notificationsDisabled) {
+			$("#toggle-notif").prop("checked", true);
+		}
+	});
+	chrome.storage.sync.get("soundDisabled", function(items) {
+		if (!items.soundDisabled) {
+			$("#toggle-sound").prop("checked", true);
+		}
+	});
+
+	// toggle pc/ps4 handler
+	$("#toggle-platform input[type=radio]").on("change", function() {
+		if (this.value == 'ps4') {
+			chrome.storage.sync.set({"rssSource":"ps4"});
+		} else if (this.value == 'pc') {
+			chrome.storage.sync.set({"rssSource":"pc"});
+		}
+		chrome.runtime.sendMessage({ msg: "rssPoll" });
+	});
+
+	// toggle sound and notif handler
+	$("#toggle-sound").on("change", function() {
+		chrome.storage.sync.set({"soundDisabled":!$(this).prop("checked")});
+	});
+	$("#toggle-notif").on("change", function() {
+		chrome.storage.sync.set({"notificationsDisabled":!$(this).prop("checked")});
+	});
+
 	// storage listener (refresh view on changes!)
 	chrome.storage.onChanged.addListener(function(changes, namespace) {
 		for (key in changes) {
@@ -26,7 +78,9 @@ $(document).ready(function() {
               storageChange.oldValue,
               storageChange.newValue);
 		}
-		updateView();
+		if (key == "data") {
+			updateView();
+		}
 	});
 
 	//initialize set of data
