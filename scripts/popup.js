@@ -43,8 +43,8 @@ $(document).ready(function() {
 			$("#toggle-notif").prop("checked", true);
 		}
 	});
-	chrome.storage.sync.get("soundDisabled", function(items) {
-		if (!items.soundDisabled) {
+	chrome.storage.sync.get("sound", function(items) {
+		if (items.sound) {
 			$("#toggle-sound").prop("checked", true);
 		}
 	});
@@ -61,7 +61,7 @@ $(document).ready(function() {
 
 	// toggle sound and notif handler
 	$("#toggle-sound").on("change", function() {
-		chrome.storage.sync.set({"soundDisabled":!$(this).prop("checked")});
+		chrome.storage.sync.set({"sound":$(this).prop("checked")});
 	});
 	$("#toggle-notif").on("change", function() {
 		chrome.storage.sync.set({"notificationsDisabled":!$(this).prop("checked")});

@@ -161,8 +161,8 @@ function sendNotification(newItem) {
 					iconUrl: "images/icon-48.png"
 			}
 			chrome.notifications.create(opt);
-			chrome.storage.sync.get("soundDisabled", function(items) {
-				if (items.soundDisabled) {
+			chrome.storage.sync.get("sound", function(items) {
+				if (!items.sound) {
 					console.log("sound disabled!");
 				} else {
 					new Audio('./assets/notif.mp3').play();
