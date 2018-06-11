@@ -28,26 +28,26 @@ hr {
 	display: flex;
 	margin-top: 10px;
 }
-
-#search-bar {
+#input-search {
 	flex: 80%;
 	padding: 0.5rem;
 	outline: none;
 	border: solid 2px #c9c9c9;
-	transition: border 0.5s;
+	transition: border 0.3s;
 }
-
-#search-bar:focus {
+#input-search:focus {
 	border: solid 2px #969696;
 }
-
-#search-button {
+#input-search:focus + #button-search {
+	background-color: #969696;
+}
+#button-search {
 	flex: 1;
 	border: none;
 	background-color: #c9c9c9;
 	color: white;
 	outline: none;
-	transition: background-color 0.5s;
+	transition: background-color 0.3s;
 	cursor: pointer;
 }
 

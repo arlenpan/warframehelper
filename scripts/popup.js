@@ -1,4 +1,4 @@
-import { STORAGE_SOURCE, STORAGE_SOUND, STORAGE_NOTIFICATIONS, ALARM_UPDATE, URL_REDDIT } from './consts.js';
+import { STORAGE_SOURCE, STORAGE_SOUND, STORAGE_NOTIFICATIONS, STORAGE_DATA, ALARM_UPDATE, URL_REDDIT } from './consts.js';
 
 const bindSettingsData = () => {
     chrome.storage.sync.get([STORAGE_SOURCE, STORAGE_SOUND, STORAGE_NOTIFICATIONS], res => {
@@ -17,19 +17,13 @@ const addUIListeners = () => {
     });
 
     // search bar
-//     //search bar handlers
-//     $("#search-button").click(function() {
-//         searchEvent();
-//     });
-//     $("#search-bar").keyup(function(e) {
-//         if (e.keyCode == 13) {searchEvent();}
-//     });
-//     $("#search-bar").focus(function() {
-//         $("#search-button").css("background-color", "#969696");
-//     });
-//     $("#search-bar").focusout(function() {
-//         $("#search-button").css("background-color", "#c9c9c9");
-//     });
+    document.getElementById('button-search').addEventListener('click', e => {
+        onSearchHandler();
+    });
+    document.getElementById('input-search').addEventListener('keyup', e => {
+        if (e.keyCode == 13) onSearchHandler();
+    });
+
 
     // settings button
     let settingsContainer = document.getElementById('settings-container');
@@ -43,7 +37,7 @@ const addUIListeners = () => {
         }
     });
 
-    // toggle console, triggers refetch
+    // settings toggle platform, triggers refetch
     document.querySelectorAll('#toggle-platform input[type=radio]').forEach(node => {
         node.addEventListener('change', e => {
             chrome.storage.sync.set({ [STORAGE_SOURCE]: e.target.value });
@@ -60,35 +54,30 @@ const addUIListeners = () => {
     });
 };
 
+const addDataListener = () => {
+    chrome.storage.onChanged.addListener(changes => {
+        console.log(changes);
+        if (changes[STORAGE_DATA] || changes[STORAGE_SOURCE]) updateView();
+    });
+};
+
+const onSearchHandler = () => {
+    const t = document.getElementById('input-search').value;
+    const url = `http://warframe.wikia.com/wiki/Special:Search?search=${t}&fulltext=Search`;
+    chrome.tabs.create({ url });
+};
+
+const updateView = () => {
+
+};
+
+const initialize = () => {
+    chrome.runtime.sendMessage({ msg: ALARM_UPDATE });
+};
+
+addDataListener();
 addUIListeners();
-
-
-//     // storage listener (refresh view on changes!)
-//     chrome.storage.onChanged.addListener(function(changes, namespace) {
-//         for (key in changes) {
-//             var storageChange = changes[key];
-//               console.log('Storage key "%s" in namespace "%s" changed. ' +
-//               'Old value was "%s", new value is "%s".',
-//               key,
-//               namespace,
-//               storageChange.oldValue,
-//               storageChange.newValue);
-//         }
-//         if (key == "data") {
-//             updateView();
-//         }
-//     });
-
-//     //initialize set of data
-//     chrome.runtime.sendMessage({ msg: "rssPoll" });
-//     updateView();
-// });
-
-// function searchEvent() {
-//     var inputtext = $("#search-bar").val();
-//     var URL = "http://warframe.wikia.com/wiki/Special:Search?search=" + inputtext + "&fulltext=Search"
-//     chrome.tabs.create({url: URL});	
-// }
+initialize();
 
 // //pulls stored local data and outputs to popup
 // function updateView() {
