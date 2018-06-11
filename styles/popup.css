@@ -56,8 +56,8 @@ hr {
 .section-container {
 	margin-top: 10px;
 	margin-bottom: 10px;
-	border-radius: 5px;
-	box-shadow: 0px 0px 10px 0px rgba(130,130,130,1);
+	border-radius: 5px;    
+	box-shadow: 0 0.938em 2.188em rgba(50,50,93,.1), 0 0.313em 0.938em rgba(0,0,0,.07);
 }
 
 .section-header {

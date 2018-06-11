@@ -8,7 +8,7 @@ const createNotification = (notification) => {
             chrome.notifications.create({
                 type: 'basic', 
                 title: 'Warframe Helper',
-                message: `NEW ALERT`,
+                message: `NEW ALERT: ${notification.title} ${notification.type}`,
                 iconUrl: 'images/icon-48.png'
             });
             if (res[STORAGE_SOUND]) {
