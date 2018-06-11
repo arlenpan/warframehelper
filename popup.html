@@ -41,27 +41,34 @@
 			<p> WARFRAME Digital Extremes &copy; 2012-2017 </p>
 			<button id="btn-settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
 		</div>
+
 		<div id="settings-container">
 			<form id="toggle-platform">
-				<label for="toggle-pc">PC</label>
-				<input type="radio" id="toggle-pc" name="toggle-platform" value="pc"/>
-				<label for="toggle-ps4">PS4</label>
-				<input type="radio" id="toggle-ps4" name="toggle-platform" value="ps4"/>
+				<label>
+					PC <input type="radio" name="toggle-platform" value="pc"/>
+				</label>
+				<label>
+					PS4 <input type="radio" name="toggle-platform" value="ps4"/>
+				</label>
+				<label>
+					XB1 <input type="radio" name="toggle-platform" value="xb1"/>
+				</label>
 			</form>
-			<form>
-				<label for="toggle-sound">Sound</label>
-				<input type="checkbox" id="toggle-sound" name="toggle-sound" value="sound"/>
-			</form>
-			<form>
-				<label for="toggle-notif">Notifications</label>
-				<input type="checkbox" id="toggle-notif" name="toggle-notif" value="notif"/>
-			</form>
+			
+			<label for="toggle-sound">
+				Sound <input type="checkbox" id="toggle-sound" name="toggle-sound" value="sound"/>
+			</label>
+			
+			<label for="toggle-notifications">
+				Notifications <input type="checkbox" id="toggle-notifications" name="toggle-notifications" value="notifications"/>
+			</label>
+			
 		</div>
 	</footer>
 
-	<script src="scripts/zepto.js"></script>
-	<script src="scripts/progressbar.js"></script>
-	<script src="scripts/popup.js"></script>
+	<!-- <script src="scripts/zepto.js"></script>
+	<script src="scripts/progressbar.js"></script> -->
+	<script type="module" src="./scripts/popup.js"></script>
 </body>
 </html>
 
