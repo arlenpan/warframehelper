@@ -1,19 +1,19 @@
 import { DELAY_IN_MINUTES, PERIOD_IN_MINUTES, ALARM_UPDATE, STORAGE_DEFAULTS, STORAGE_NOTIFICATIONS, STORAGE_SOUND } from './consts.js';
 import { update } from './data.js';
 
-//TODO: notification styling
-const createNotification = (notification) => {
+const createNotification = notif => {
     chrome.storage.sync.get([STORAGE_NOTIFICATIONS, STORAGE_SOUND], res => {
         if (res[STORAGE_NOTIFICATIONS]) {
             chrome.notifications.create({
                 type: 'basic', 
-                title: 'Warframe Helper',
-                message: `NEW ALERT: ${notification.title} ${notification.type}`,
+                title: `Warframe Helper: New ${notif.type}`,
+                message: `${notif.title} - ${notif.mission}:\n${notif.reward}`,
                 iconUrl: 'images/icon-48.png'
+            }, () => {
+                if (res[STORAGE_SOUND]) {
+                    new Audio('./assets/notif.mp3').play();
+                }
             });
-            if (res[STORAGE_SOUND]) {
-                new Audio('./assets/notif.mp3').play();
-            }
         }
     });
 };

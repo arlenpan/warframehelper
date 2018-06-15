@@ -2,24 +2,31 @@ import { STORAGE_SOURCE, STORAGE_DATA, URLS } from './consts.js';
 import { createNotification } from './background.js';
 
 const update = () => {
+    console.log('Update called!');
     chrome.storage.sync.get(STORAGE_SOURCE, res => {
         if (res[STORAGE_SOURCE]) {
             fetchWorldState(res[STORAGE_SOURCE])
                 .then(res => {
-                    let n = mapArrayToDict(res, ['alerts', 'invasions']);
+                    let n = mapArrayToDict(res, ['alerts', 'invasions', 'fissures']);
                     console.log(n);
+
                     chrome.storage.local.get(STORAGE_DATA, res => {
                         let old = res[STORAGE_DATA];
                         let newAlertIds = getDiff(n.alerts, old.alerts);
-                        console.log(newAlertIds);
-                        newAlertIds.map(id => {
-                            createNotification({
-                                title: n.alerts[id].mission.node,
-                                type: n.alerts[id].mission.type
+                        console.log('newAlertIds', newAlertIds);
+                        if (newAlertIds.length == 1) {
+                            newAlertIds.map(id => {
+                                createNotification({
+                                    type: 'Alert',
+                                    title: n.alerts[id].mission.node,
+                                    mission: n.alerts[id].mission.type,
+                                    reward: n.alerts[id].mission.reward.asString
+                                });
                             });
-                        });
+                        }
                     });
-                    save(STORAGE_DATA, n);
+                    
+                    chrome.storage.local.set({ [STORAGE_DATA]: n });
                 });
         }
     });
@@ -53,10 +60,6 @@ const getDiff = (newObj, oldObj) => {
     let a = Object.keys(newObj);
     let b = Object.keys(oldObj);
     return a.filter(x => !b.includes(x));
-};
-
-const save = (key, data) => {
-    chrome.storage.local.set({ [key]: data });
 };
 
 export { update };

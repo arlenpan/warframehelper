@@ -4,13 +4,19 @@
 	<title>Warframe Helper</title>
 
 	<link rel="stylesheet" href="styles/popup.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" >
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
 
 	<header>
-		<img id="header-image" src="/images/header.png">
+		<div class="flex-column" id="container-cycles"></div>
+		<img id="header-image" src="/images/icon-128.png">
+		<div class="flex-column" id="container-links">
+			<a href="#container-alerts">Alerts</a>
+			<a href="#container-invasions">Invasions</a>
+			<a href="#container-fissures">Fissures</a>
+			<a href="#container-dailydeal">Daily Deals</a>
+		</div>
 	</header>
 
 	<section id="search">
@@ -24,7 +30,6 @@
 		<div class="section-header">
 			<h3>Alerts</h3>
 		</div>
-		<hr>
 		<div class="section-list" id="list-alerts"></div>
 	</section>
 
@@ -32,17 +37,33 @@
 		<div class="section-header">
 			<h3>Invasions</h3>
 		</div>
-		<hr>
 		<div class="section-list" id="list-invasions"></div>
+	</section>
+	
+	<section class="section-container" id="container-fissures">
+		<div class="section-header">
+			<h3>Fissures</h3>
+		</div>
+		<div class="section-list" id="list-fissures"></div>
+	</section>
+
+	<section class="section-container" id="container-dailydeal">
+		<div class="section-header">
+			<h3>Daily Deals</h3>
+		</div>
+		<div class="section-list" id="list-dailydeal"></div>
 	</section>
 
 	<footer>
 		<div class="settings-header">
 			<div>
 				<p>WARFRAME Digital Extremes &copy; 2012-2018 </p>
-				<p>Thanks to <a href="https://warframestat.us">https://warframestat.us/</a> for data </p>
+				<p>Thanks to <a href="https://warframestat.us">warframestat</a> for data </p>
+				<p>Request new features <a href="https://chrome.google.com/webstore/detail/warframe-helper/megdibgjimdgcjgdjocdldjchhfmhacb/support?hl=en">here</a></p>
 			</div>
-			<button id="btn-settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
+			<div>
+				<button id="btn-settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
+			</div>
 		</div>
 
 		<div id="settings-container">
@@ -69,8 +90,6 @@
 		</div>
 	</footer>
 
-	<!-- <script src="scripts/zepto.js"></script>
-	<script src="scripts/progressbar.js"></script> -->
 	<script type="module" src="./scripts/popup.js"></script>
 </body>
 </html>

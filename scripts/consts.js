@@ -21,3 +21,10 @@ URLS[PLATFORM_PC] = 'https://api.warframestat.us/pc';
 URLS[PLATFORM_XB1] = 'https://api.warframestat.us/xb1';
 URLS[PLATFORM_PS4] = 'https://api.warframestat.us/ps4';
 export const URL_REDDIT = 'https://www.reddit.com/r/Warframe/';
+
+export const VOID_TIERS = {
+    Lith: 'Tier 1',
+    Meso: 'Tier 2',
+    Neo: 'Tier 3',
+    Axi: 'Tier 4'
+};
