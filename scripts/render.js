@@ -8,7 +8,9 @@ const startTimer = (id, /* date */ expiry) => {
         let hours = (timeLeft) / 3600 | 0;
         let minutes = (timeLeft % 3600) / 60 | 0;
         let seconds = (timeLeft) % 60 | 0;
-        el.innerText = `${hours}h ${minutes}m ${seconds}s`;
+        let hourText = hours ? `${hours}h ` : '';
+        let minText = minutes ? `${minutes}m ` : '';
+        el.innerText = `${hourText}${minText}${seconds}s`;
         if (timeLeft > 0) timeLeft -= 1;
     };
     timer();
@@ -155,4 +157,20 @@ export const renderFissures = /* object */ fissures => {
         container.innerHTML += n;
         startTimer(id, Date.parse(d.expiry));
     }
+};
+
+export const renderVoidTrader = /* object */ voidTrader => {
+    const container = document.getElementById('list-voidtrader');
+    container.innerHTML = '';
+    let n = `
+        <div class="item flex-row">
+            <div class="item-left">
+                <h3>${voidTrader.character}</h3>
+                <span>${voidTrader.location}</span>
+            </div>
+            <div class="item-right>
+            </div>
+        </div>
+    `;
+    container.innerHTML = n;
 };

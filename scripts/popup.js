@@ -81,6 +81,7 @@ const updateView = () => {
         render.renderInvasions(r.invasions);
         render.renderDailyDeal(r.dailyDeals);
         render.renderFissures(r.fissures);
+        render.renderVoidTrader(r.voidTrader);
     });
 };
 
@@ -92,39 +93,3 @@ const initialize = () => {
 addDataListener();
 addUIListeners();
 initialize();
-
-// function startTimer(item) {
-//     //calculate min/secs (initialization)
-//     var timeleft = Math.round((Date.parse(item.expiry) - new Date()) / 1000);
-//     var timetotal = item.timetotal.substring(0, item.timetotal.length - 1);
-//     var mins = Math.floor(timeleft / 60);
-//     var secs = timeleft % 60;
-//     var timestr = mins + "." + secs;
-
-//     //timer object
-//     var timer = new ProgressBar.Circle("#right-item-" + item.guid, {
-//         strokeWidth: 5,
-//         fill: 'rgba(173,216,230, 0.5)',
-//         text: {
-//             value: timestr
-//         }
-//     });
-
-//     timer.animate((timetotal - mins) / timetotal);
-    
-//     //setup timer display. remove element if timer hits 0
-//     setInterval(function() {
-//         if (timeleft > 0) {
-//             //countdown
-//             timeleft = timeleft - 1;
-//             mins = Math.floor(timeleft / 60);
-//             secs = timeleft % 60;
-//             timestr = mins + "." + secs;
-
-//             timer.text.innerHTML = timestr;
-//             timer.animate((timetotal - mins) / timetotal);
-//         } else {
-//             $("#item-" + item.guid).remove();
-//         }
-//     }, 1000);
-// }
