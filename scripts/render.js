@@ -1,16 +1,20 @@
 import { VOID_TIERS } from './consts.js';
 
-const startTimer = (id, /* date */ expiry) => {
+const startTimer = (id, /* date */ expiry, /* date */ start) => {
     let timeLeft = (expiry - Date.now()) / 1000;
     if (timeLeft < 0) return;
     const timer = () => {
         let el = document.getElementById(`timer-${id}`);
-        let hours = (timeLeft) / 3600 | 0;
+        let days = (timeLeft) / (3600 * 24) | 0;
+        let hours = (timeLeft % (3600 * 24)) / 3600 | 0;
         let minutes = (timeLeft % 3600) / 60 | 0;
         let seconds = (timeLeft) % 60 | 0;
+        let dayText = days ? `${days}d ` : '';
         let hourText = hours ? `${hours}h ` : '';
         let minText = minutes ? `${minutes}m ` : '';
-        el.innerText = `${hourText}${minText}${seconds}s`;
+        el.innerHTML = (timeLeft > 0) ? 
+            `${dayText}${hourText}${minText}${seconds}s`
+            : '<span class="expired">expired</span>';
         if (timeLeft > 0) timeLeft -= 1;
     };
     timer();
@@ -165,12 +169,38 @@ export const renderVoidTrader = /* object */ voidTrader => {
     let n = `
         <div class="item flex-row">
             <div class="item-left">
-                <h3>${voidTrader.character}</h3>
+                <h4>${voidTrader.character}</h4>
                 <span>${voidTrader.location}</span>
             </div>
-            <div class="item-right>
+            <div class="item-right">
+                <span class="timer" id="timer-${voidTrader.id}"></span>
             </div>
         </div>
     `;
     container.innerHTML = n;
+    const dAct = Date.parse(voidTrader.activation);
+    let d = (dAct - Date.now() > 0) ? dAct : Date.parse(voidTrader.expiry);
+    startTimer(voidTrader.id, d);
+};
+
+export const renderSortie = /* object */ sortie => {
+    const container = document.getElementById('list-sortie');
+    container.innerHTML = '';
+
+    sortie.variants.map((d,i) => {
+        let id = sortie.id + i;
+        let n = `
+            <div class="item flex-row">
+                <div class="item-left">
+                    <h4>${d.node} - ${d.missionType}</h4>
+                    <span>${d.modifier}</span>
+                </div>
+                <div class="item-right">
+                    <span class="timer" id="timer-${id}"></span>
+                </div>
+            </div>
+        `;
+        container.innerHTML += n;
+        startTimer(id, Date.parse(sortie.expiry));
+    });
 };

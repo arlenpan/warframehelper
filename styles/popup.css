@@ -15,7 +15,7 @@ header {
 }
 header > div:first-child, header > div:last-child {
 	justify-content: center;
-	width: 33%;
+	width: 25%;
 }
 header > div:last-child {
 	text-align: right;
@@ -63,7 +63,6 @@ header img {
 .section-container {
 	margin: 1rem 0;
 }
-
 .section-header {
 	text-align: center;
 }

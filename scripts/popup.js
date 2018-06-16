@@ -82,6 +82,7 @@ const updateView = () => {
         render.renderDailyDeal(r.dailyDeals);
         render.renderFissures(r.fissures);
         render.renderVoidTrader(r.voidTrader);
+        render.renderSortie(r.sortie);
     });
 };
 
