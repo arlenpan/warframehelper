@@ -2,7 +2,6 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
     let timeStart = (start) ? (start - Date.now()) / 1000 : null;
     let timeExpiry = (expiry) ? (expiry - Date.now()) / 1000 : null;
     let timeLeft = timeExpiry;
-    if (timeLeft < 0) return;
     const timer = () => {
         let el = document.getElementById(`timer-${id}`);
         let days = (timeLeft) / (3600 * 24) | 0;
@@ -12,9 +11,16 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
         let dayText = days ? `${days}d ` : '';
         let hourText = hours ? `${hours}h ` : '';
         let minText = minutes ? `${minutes}m ` : '';
-        el.innerHTML = (timeLeft > 0) ? 
-            `${dayText}${hourText}${minText}${seconds}s`
-            : '<span class="expired">expired</span>';
+        if (el) {
+            if (timeLeft < (10 * 60) && el.className != 'timer red') {
+                el.className = 'timer red';
+            }
+            if (timeLeft > 0) {
+                el.innerHTML = `${dayText}${hourText}${minText}${seconds}s`;
+            } else {
+                el.innerHTML = 'expired';
+            }
+        }
         if (timeLeft > 0) timeLeft -= 1;
     };
     timer();
@@ -71,7 +77,7 @@ export const renderInvasions = /* array */ invasions => {
         if (!d.completed) {
             container.innerHTML += `
                 <div class="item flex-column" id="item-${d.id}">
-                    <h4>${d.name} - ${d.desc} (${d.completion})</h4>
+                    <h4>${d.name} - ${d.type} (${d.completion})</h4>
                     <div class="flex-row">
                         <div class="item-left item-detail">
                             <span>${d.aFaction}</span>
@@ -87,26 +93,6 @@ export const renderInvasions = /* array */ invasions => {
                 </div>
             `;
         }
-    });
-};
-
-export const renderDailyDeal = /* array */ dailyDeal => {
-    const container = document.getElementById('list-dailydeal');
-    container.innerHTML = '';
-    dailyDeal.map(d => {
-        let n = `
-            <div class="item flex-row">
-                <div class="item-left">
-                    <h4>${d.item} - ${d.salePrice} plat</h4>
-                    <span>${d.discount}% off - ${d.total-d.sold}/${d.total} remaining</span>
-                </div>
-                <div class="item-right>
-                    <span class="timer" id="timer-${d.id}"></span>
-                </div>
-            </div>
-        `;
-        container.innerHTML += n;
-        startTimer(d.id, Date.parse(d.expiry));
     });
 };
 
@@ -129,11 +115,65 @@ export const renderFissures = /* object */ fissures => {
     });
 };
 
+export const renderSortie = /* object */ sortie => {
+    const container = document.getElementById('list-sortie');
+    container.innerHTML = '';
+    container.innerHTML += `
+        <div class="item flex-row mb-0">
+            <div class="item-left">
+                <h4>${sortie.boss} (${sortie.faction})</h4>
+            </div>
+            <div class="item-right">
+                <span class="timer" id="timer-${sortie.id}"></span>
+            </div>
+        </div>
+    `;
+    startTimer(sortie.id, Date.parse(sortie.expiry));
+
+    let nsub = '<div class="item-list">';
+    sortie.variants.map((d,i) => {
+        nsub += `
+            <div class="item-list-item flex-row">
+                <div class="item-left">
+                    <h4>${d.node} - ${d.missionType}</h4>
+                </div>
+                <div class="item-right">
+                    <span>${d.modifier}</span>
+                </div>
+            </div>
+        `;
+    });
+    nsub += '</div>';
+    container.innerHTML += nsub;
+};
+
+export const renderDailyDeal = /* array */ dailyDeal => {
+    const container = document.getElementById('list-dailydeal');
+    container.innerHTML = '';
+    dailyDeal.map(d => {
+        let expiredClass = (d.total == d.sold) ? 'red' : '';
+        container.innerHTML += `
+            <div class="item flex-row">
+                <div class="item-left">
+                    <h4>${d.item} - ${d.salePrice} plat</h4>
+                    <span>
+                        ${d.discount}% off - 
+                        <span class="${expiredClass}">${d.total-d.sold}/${d.total} remaining</span>
+                    </span>
+                </div>
+                <div class="item-right>
+                    <span class="timer" id="timer-${d.id}"></span>
+                </div>
+            </div>
+        `;
+        startTimer(d.id, Date.parse(d.expiry));
+    });
+};
 
 export const renderVoidTrader = /* object */ voidTrader => {
     const container = document.getElementById('list-voidtrader');
     container.innerHTML = '';
-    let n = `
+    container.innerHTML += `
         <div class="item flex-row mb-0">
             <div class="item-left">
                 <h4>${voidTrader.character}</h4>
@@ -144,7 +184,6 @@ export const renderVoidTrader = /* object */ voidTrader => {
             </div>
         </div>
     `;
-    container.innerHTML += n;
 
     if (voidTrader.inventory) {
         let nsub = `
@@ -179,36 +218,4 @@ export const renderVoidTrader = /* object */ voidTrader => {
     const dAct = Date.parse(voidTrader.activation);
     let d = (dAct - Date.now() > 0) ? dAct : Date.parse(voidTrader.expiry);
     startTimer(voidTrader.id, d);
-};
-
-export const renderSortie = /* object */ sortie => {
-    const container = document.getElementById('list-sortie');
-    container.innerHTML = '';
-    container.innerHTML += `
-        <div class="item flex-row mb-0">
-            <div class="item-left">
-                <h4>${sortie.boss} (${sortie.faction})</h4>
-            </div>
-            <div class="item-right">
-                <span class="timer" id="timer-${sortie.id}"></span>
-            </div>
-        </div>
-    `;
-    startTimer(sortie.id, Date.parse(sortie.expiry));
-
-    let nsub = '<div class="item-list">';
-    sortie.variants.map((d,i) => {
-        nsub += `
-            <div class="item-list-item flex-row">
-                <div class="item-left">
-                    <h4>${d.node} - ${d.missionType}</h4>
-                </div>
-                <div class="item-right">
-                    <span>${d.modifier}</span>
-                </div>
-            </div>
-        `;
-    });
-    nsub += '</div>';
-    container.innerHTML += nsub;
 };

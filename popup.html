@@ -31,43 +31,61 @@
 	</section>
 
 	<section class="section-container" id="container-alerts">
-		<div class="section-header">
+		<div class="section-header flex-row">
 			<h3>Alerts</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_alerts">
+			</label>
 		</div>
 		<div class="section-list" id="list-alerts"></div>
 	</section>
 
 	<section class="section-container" id="container-invasions">
-		<div class="section-header">
+		<div class="section-header flex-row">
 			<h3>Invasions</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_invasions">
+			</label>
 		</div>
 		<div class="section-list" id="list-invasions"></div>
 	</section>
 	
 	<section class="section-container" id="container-fissures">
-		<div class="section-header">
+		<div class="section-header flex-row">
 			<h3>Fissures</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_fissures">
+			</label>
 		</div>
 		<div class="section-list" id="list-fissures"></div>
 	</section>
 
 	<section class="section-container" id="container-sortie">
-			<div class="section-header">
-				<h3>Sorties</h3>
-			</div>
-			<div class="section-list" id="list-sortie"></div>
+		<div class="section-header flex-row">
+			<h3>Sorties</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_sortie">
+			</label>
+		</div>
+		<div class="section-list" id="list-sortie"></div>
 	</section>
 
 	<section class="section-container" id="container-dailydeal">
-		<div class="section-header">
+		<div class="section-header flex-row">
 			<h3>Daily Deals</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_dailydeal">
+			</label>
 		</div>
 		<div class="section-list" id="list-dailydeal"></div>
 	</section>
 
 	<section class="section-container" id="container-voidtrader">
-		<div class="section-header">
+		<div class="section-header flex-row">
 			<h3>Void Trader</h3>
+			<label> Notifications: 
+				<input class="toggle-notification" type="checkbox" data-type="n_voidtrader">
+			</label>
 		</div>
 		<div class="section-list" id="list-voidtrader"></div>
 	</section>
@@ -101,10 +119,11 @@
 				Sound <input type="checkbox" id="toggle-sound" name="toggle-sound" value="sound"/>
 			</label>
 			
-			<label for="toggle-notifications">
-				Notifications <input type="checkbox" id="toggle-notifications" name="toggle-notifications" value="notifications"/>
-			</label>
-			
+			<span>
+				<label>Notifications:</label>
+				<button type="button" class="toggle-notification" data-toggle="false">Disable all</button>
+				<button type="button" class="toggle-notification" data-toggle="true">Enable all</button>
+			</span>
 		</div>
 	</footer>
 

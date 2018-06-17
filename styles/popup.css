@@ -61,10 +61,7 @@ header img {
 
 /*containers*/
 .section-container {
-	margin: 1rem 0;
-}
-.section-header {
-	text-align: center;
+	margin: 2rem 0;
 }
 
 /* items */
@@ -154,4 +151,7 @@ header img {
 }
 .mb-0 {
 	margin-bottom: 0;
+}
+.red {
+	color: red;
 }

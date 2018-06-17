@@ -2,7 +2,7 @@ import { STORAGE_SOURCE, STORAGE_DATA, URLS, VOID_TIERS } from './consts.js';
 import { createNotification } from './background.js';
 
 const update = () => {
-    console.log('Update called!');
+    console.log('===== Update called! =====');
     chrome.storage.sync.get(STORAGE_SOURCE, res => {
         if (res[STORAGE_SOURCE]) {
             fetchWorldState(res[STORAGE_SOURCE])
@@ -14,18 +14,10 @@ const update = () => {
 
                     // compare and create notifications
                     chrome.storage.local.get(STORAGE_DATA, res => {
-                        let old = res[STORAGE_DATA];
-                        let newAlertIds = getDiff(n.alerts, old.alerts);
-                        console.log('newAlertIds', newAlertIds);
-                        if (newAlertIds.length == 1) {
-                            newAlertIds.map(alert => {
-                                createNotification({
-                                    type: 'Alert',
-                                    title: alert.name,
-                                    mission: alert.type,
-                                    reward: alert.rString
-                                });
-                            });
+                        if (res[STORAGE_DATA]) {
+                            checkNewNotification(n, res[STORAGE_DATA], 'alerts');
+                            checkNewNotification(n, res[STORAGE_DATA], 'invasions');
+                            checkNewNotification(n, res[STORAGE_DATA], 'fissures');
                         }
                     });
                     
@@ -35,8 +27,33 @@ const update = () => {
     });
 };
 
+const checkNewNotification = (/* array */ newData, /* array */ oldData, /* string */ key) => {
+    let diff = getDiff(newData[key], oldData[key]);
+    if (diff.length > 0) console.log(`new ${key}`, diff);
+    if (diff.length == 1) {
+        let desc;
+        switch(key) {
+            case 'alerts': desc = diff[0].rString; break;
+            case 'invasions': 
+                if (diff[0].aReward) 
+                    desc = `${diff[0].aReward} or ${diff[0].dReward}`; 
+                else {
+                    desc = `${diff[0].dReward}`;
+                }
+                break;
+            case 'fissures': desc = `${diff[0].tierName} (${diff[0].tier})`;
+        }
+        createNotification({
+            type: key.charAt(0).toUpperCase() + key.slice(1, -1),
+            title: diff[0].name,
+            mission: diff[0].type,
+            reward: desc
+        });
+    }
+};
+
 const parseAlerts = /* array */ alerts => {
-    console.log('parsing alerts', alerts);
+    // console.log('parsing alerts', alerts);
     return alerts.map(alert => ({
         id:         alert.id,
         name:       alert.mission.node,
@@ -54,11 +71,11 @@ const parseAlerts = /* array */ alerts => {
 };
 
 const parseInvasions = /* array */ invasions => {
-    console.log('parsing invasions', invasions);
+    // console.log('parsing invasions', invasions);
     return invasions.map(invasion => ({
         id:         invasion.id,
         name:       invasion.node,
-        desc:       invasion.desc,
+        type:       invasion.desc,
         aFaction:   invasion.attackingFaction,
         aReward:    invasion.attackerReward.itemString,
         aCredits:   invasion.attackerReward.credits,
@@ -74,7 +91,7 @@ const parseInvasions = /* array */ invasions => {
 };
 
 const parseFissures = /* array */ fissures => {
-    console.log('parsing fissures', fissures);
+    // console.log('parsing fissures', fissures);
     return fissures.map(fissure => ({
         id:         fissure.id,
         name:       fissure.node,

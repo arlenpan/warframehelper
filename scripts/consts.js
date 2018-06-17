@@ -6,15 +6,23 @@ export const PLATFORM_PC = 'pc';
 export const PLATFORM_XB1 = 'xb1';
 export const PLATFORM_PS4 = 'ps4';
 
+export const NOTIFICATIONS = {
+    n_alerts: true,
+    n_invasions: false,
+    n_fissures: false,
+    n_sortie: false,
+    n_dailydeal: false,
+    n_voidtrader: false
+};
+
 export const STORAGE_SOURCE = 'storage.source';
 export const STORAGE_SOUND = 'storage.sound';
 export const STORAGE_NOTIFICATIONS = 'storage.notifications';
 export const STORAGE_DATA = 'storage.data';
-export const STORAGE_DEFAULTS = {
+export const STORAGE_DEFAULTS = Object.assign({
     [STORAGE_SOURCE]: PLATFORM_PC,
-    [STORAGE_SOUND]: false,
-    [STORAGE_NOTIFICATIONS]: true
-};
+    [STORAGE_SOUND]: false
+}, NOTIFICATIONS);
 
 export const URLS = {};
 URLS[PLATFORM_PC] = 'https://api.warframestat.us/pc';

@@ -1,13 +1,20 @@
-import { STORAGE_SOURCE, STORAGE_SOUND, STORAGE_NOTIFICATIONS, STORAGE_DATA, ALARM_UPDATE, URL_REDDIT } from './consts.js';
+import { STORAGE_SOURCE, STORAGE_SOUND, NOTIFICATIONS, STORAGE_DATA, ALARM_UPDATE, URL_REDDIT } from './consts.js';
 import * as render from './render.js';
 
 const bindSettingsData = () => {
-    chrome.storage.sync.get([STORAGE_SOURCE, STORAGE_SOUND, STORAGE_NOTIFICATIONS], res => {
+    chrome.storage.sync.get([STORAGE_SOURCE, STORAGE_SOUND], res => {
         document.querySelectorAll('#toggle-platform input[type=radio]').forEach(node => {
             node.checked = (node.value == res[STORAGE_SOURCE]);
         });
         document.getElementById('toggle-sound').checked = res[STORAGE_SOUND];
-        document.getElementById('toggle-notifications').checked = res[STORAGE_NOTIFICATIONS];
+    });
+};
+
+const bindNotificationsSettings = () => {
+    chrome.storage.sync.get(Object.keys(NOTIFICATIONS), res => {
+        document.querySelectorAll('input.toggle-notification').forEach(node => {
+            node.checked = res[node.dataset.type];
+        });
     });
 };
 
@@ -50,14 +57,29 @@ const addUIListeners = () => {
     document.getElementById('toggle-sound').addEventListener('change', e => {
         chrome.storage.sync.set({ [STORAGE_SOUND]: e.target.checked });
     });
-    document.getElementById('toggle-notifications').addEventListener('change', e => {
-        chrome.storage.sync.set({ [STORAGE_NOTIFICATIONS]: e.target.checked });
+    document.querySelectorAll('input.toggle-notification').forEach(node => {
+        node.addEventListener('change', e => {
+            chrome.storage.sync.set({ [node.dataset.type]: e.target.checked });
+        });
+    });
+    document.querySelectorAll('button.toggle-notification').forEach(node => {
+        node.addEventListener('click', e => {
+            toggleAllNotifications(node.dataset.toggle);
+        });
     });
 
     // links
     document.querySelectorAll('.settings-header a').forEach(n => n.addEventListener('click', e => {
         chrome.tabs.create({ url: e.target.href });
     }));
+};
+
+const toggleAllNotifications = enable => {
+    let query = Object.assign({}, NOTIFICATIONS);
+    for (let key in query) {
+        query[key] = enable == 'true';
+    }
+    chrome.storage.sync.set(query);
 };
 
 const onSearchHandler = () => {
@@ -69,7 +91,7 @@ const onSearchHandler = () => {
 const addDataListener = () => {
     chrome.storage.onChanged.addListener(changes => {
         console.log('changes', changes);
-        if (changes[STORAGE_DATA] || changes[STORAGE_SOURCE]) updateView();
+        updateView();
     });
 };
 
@@ -84,6 +106,7 @@ const updateView = () => {
         render.renderVoidTrader(r.voidTrader);
         render.renderSortie(r.sortie);
     });
+    bindNotificationsSettings();
 };
 
 const initialize = () => {
