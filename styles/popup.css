@@ -78,8 +78,17 @@ header img {
 .item .item-detail {
 	margin-top: 5px;
 }
+.item-list {
+	padding: 0.5rem;
+}
+.item-list-item:not(:last-child) {
+	border-bottom: 1px solid lightgray;
+}
 .item:hover {
 	transform: translateY(-1px);
+}
+.col {
+	width: 40%;
 }
 
 /* item tags */
@@ -142,4 +151,7 @@ header img {
 .flex-column {
 	display: flex;
 	flex-direction: column;
+}
+.mb-0 {
+	margin-bottom: 0;
 }

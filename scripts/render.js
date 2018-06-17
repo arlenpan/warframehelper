@@ -1,7 +1,7 @@
-import { VOID_TIERS } from './consts.js';
-
 const startTimer = (id, /* date */ expiry, /* date */ start) => {
-    let timeLeft = (expiry - Date.now()) / 1000;
+    let timeStart = (start) ? (start - Date.now()) / 1000 : null;
+    let timeExpiry = (expiry) ? (expiry - Date.now()) / 1000 : null;
+    let timeLeft = timeExpiry;
     if (timeLeft < 0) return;
     const timer = () => {
         let el = document.getElementById(`timer-${id}`);
@@ -21,6 +21,12 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
     setInterval(timer, 1000);
 };
 
+const sortArrayByKey = (a, key) => {
+    return a.slice().sort((a, b) => {
+        return a[key] - b[key];
+    }).reverse();
+};
+
 export const renderCycles = (cetus, earth) => {
     const container = document.getElementById('container-cycles');
     container.innerHTML = '';
@@ -35,24 +41,12 @@ export const renderCycles = (cetus, earth) => {
     startTimer(earth.id, Date.parse(earth.expiry));
 };
 
-export const renderAlerts = /* object */ alerts => {
+export const renderAlerts = /* array */ alerts => {
     const container = document.getElementById('list-alerts');
     container.innerHTML = '';
-    for (let id in alerts) {
-        const d = {
-            name:       alerts[id].mission.node,
-            type:       alerts[id].mission.type,
-            faction:    alerts[id].mission.faction,
-            max:        alerts[id].mission.maxEnemyLevel,
-            min:        alerts[id].mission.minEnemyLevel,
-            nightmare:  alerts[id].mission.nightmare,
-            rewardItem: alerts[id].mission.reward.itemString,
-            credits:    alerts[id].mission.reward.credits,
-            expiry:     alerts[id].expiry,
-            expired:    alerts[id].expired
-        };
-        const n = `
-            <div class="item flex-row" id="item-${id}">
+    alerts.map(d => {
+        container.innerHTML  += `
+            <div class="item flex-row" id="item-${d.id}">
                 <div class="item-left">
                     <h4>${d.name} - ${d.type} (<span>Level ${d.min}-${d.max}</span>)</h4>
                     <div class="item-detail">
@@ -62,55 +56,38 @@ export const renderAlerts = /* object */ alerts => {
                     </div>
                 </div>
                 <div class="item-right">
-                    <span class="timer" id="timer-${id}"></span>
+                    <span class="timer" id="timer-${d.id}"></span>
                 </div>
             </div>
         `;
-        container.innerHTML += n;
-        startTimer(id, Date.parse(d.expiry));
-    }
+        startTimer(d.id, d.expiry);
+    });
 };
 
-export const renderInvasions = /* object */ invasions => {
+export const renderInvasions = /* array */ invasions => {
     const container = document.getElementById('list-invasions');
     container.innerHTML = '';
-    for (let id in invasions) {
-        const d = {
-            name:       invasions[id].node,
-            desc:       invasions[id].desc,
-            aFaction:   invasions[id].attackingFaction,
-            aReward:    invasions[id].attackerReward.itemString,
-            aCredits:   invasions[id].attackerReward.credits,
-            dFaction:   invasions[id].defendingFaction,
-            dReward:    invasions[id].defenderReward.itemString,
-            dCredits:   invasions[id].defenderReward.credits,
-            completion: (invasions[id].completion / 100).toLocaleString('en-us', {
-                style: 'percent',
-                minimumFractionDigits: 2
-            }),
-            completed:  invasions[id].completed
-        };
-        const n = `
-            <div class="item flex-column" id="item-${id}">
-                <h4>${d.name} - ${d.desc} (${d.completion})</h4>
-                <div class="flex-row">
-                    <div class="item-left item-detail">
-                        <span>${d.aFaction}</span>
-                        ${d.aReward ? `<span class="tag reward">${d.aReward}</span>` : ''}
-                        ${d.aCredits ? `<span class="tag credits">${d.aCredits}cr</span>` : ''}
-                    </div>
-                    <div class="item-right item-detail">
-                        ${d.dReward ? `<span class="tag reward">${d.dReward}</span>`: ''}
-                        ${d.dCredits ? `<span class="tag credits">${d.dCredits}cr</span>` : ''}
-                        <span>${d.dFaction}</span>
+    invasions.map(d => {
+        if (!d.completed) {
+            container.innerHTML += `
+                <div class="item flex-column" id="item-${d.id}">
+                    <h4>${d.name} - ${d.desc} (${d.completion})</h4>
+                    <div class="flex-row">
+                        <div class="item-left item-detail">
+                            <span>${d.aFaction}</span>
+                            ${d.aReward ? `<span class="tag reward">${d.aReward}</span>` : ''}
+                            ${d.aCredits ? `<span class="tag credits">${d.aCredits}cr</span>` : ''}
+                        </div>
+                        <div class="item-right item-detail">
+                            ${d.dReward ? `<span class="tag reward">${d.dReward}</span>`: ''}
+                            ${d.dCredits ? `<span class="tag credits">${d.dCredits}cr</span>` : ''}
+                            <span>${d.dFaction}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        if (!d.completed) {
-            container.innerHTML += n;
+            `;
         }
-    }
+    });
 };
 
 export const renderDailyDeal = /* array */ dailyDeal => {
@@ -136,38 +113,28 @@ export const renderDailyDeal = /* array */ dailyDeal => {
 export const renderFissures = /* object */ fissures => {
     const container = document.getElementById('list-fissures');
     container.innerHTML = '';
-    for (let id in fissures) {
-        const d = {
-            name:       fissures[id].node,
-            type:       fissures[id].missionType,
-            expiry:     fissures[id].expiry,
-            expired:    fissures[id].expired,
-            tierName:   fissures[id].tier,
-            tier:       VOID_TIERS[fissures[id].tier],
-            enemy:      fissures[id].enemy
-        };
-        let n = `
+    fissures.map(d => {
+        container.innerHTML += `
             <div class="item flex-row">
                 <div class="item-left">
-                    <span>
-                        <b>${d.name} - ${d.type}</b> ${d.tierName} (${d.tier})
-                    </span>
+                    <h4>${d.name} - ${d.type}</h4>
                 </div>
-                <div class="item-right>
-                    <span class="timer" id="timer-${id}"></span>
+                <div class="item-right col flex-row">
+                    <span>${d.tierName} (${d.tier})</span>
+                    <span class="timer" id="timer-${d.id}"></span>
                 </div>
             </div>
         `;
-        container.innerHTML += n;
-        startTimer(id, Date.parse(d.expiry));
-    }
+        startTimer(d.id, d.expiry);
+    });
 };
+
 
 export const renderVoidTrader = /* object */ voidTrader => {
     const container = document.getElementById('list-voidtrader');
     container.innerHTML = '';
     let n = `
-        <div class="item flex-row">
+        <div class="item flex-row mb-0">
             <div class="item-left">
                 <h4>${voidTrader.character}</h4>
                 <span>${voidTrader.location}</span>
@@ -177,7 +144,38 @@ export const renderVoidTrader = /* object */ voidTrader => {
             </div>
         </div>
     `;
-    container.innerHTML = n;
+    container.innerHTML += n;
+
+    if (voidTrader.inventory) {
+        let nsub = `
+            <div class="item-list" id="list-${voidTrader.id}">
+                <div class="item-list-item flex-row">
+                    <div class="item-left">
+                        <h4>Item</h4>
+                    </div>
+                    <div class="item-right col flex-row">
+                        <h4>Ducats</h4>
+                        <h4>Credits</h4>
+                    </div>
+                </div>
+        `;
+        sortArrayByKey(voidTrader.inventory, 'ducats').map(item => {
+            let n = `
+                <div class="item-list-item flex-row"">
+                    <div class="item-left">
+                        <span>${item.item}</span>
+                    </div>
+                    <div class="item-right col flex-row">
+                        <span>${item.ducats.toLocaleString()}</span>
+                        <span>${item.credits.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+            nsub += n;
+        });
+        nsub += '</div>';
+        container.innerHTML += nsub;
+    }
     const dAct = Date.parse(voidTrader.activation);
     let d = (dAct - Date.now() > 0) ? dAct : Date.parse(voidTrader.expiry);
     startTimer(voidTrader.id, d);
@@ -186,21 +184,31 @@ export const renderVoidTrader = /* object */ voidTrader => {
 export const renderSortie = /* object */ sortie => {
     const container = document.getElementById('list-sortie');
     container.innerHTML = '';
+    container.innerHTML += `
+        <div class="item flex-row mb-0">
+            <div class="item-left">
+                <h4>${sortie.boss} (${sortie.faction})</h4>
+            </div>
+            <div class="item-right">
+                <span class="timer" id="timer-${sortie.id}"></span>
+            </div>
+        </div>
+    `;
+    startTimer(sortie.id, Date.parse(sortie.expiry));
 
+    let nsub = '<div class="item-list">';
     sortie.variants.map((d,i) => {
-        let id = sortie.id + i;
-        let n = `
-            <div class="item flex-row">
+        nsub += `
+            <div class="item-list-item flex-row">
                 <div class="item-left">
                     <h4>${d.node} - ${d.missionType}</h4>
-                    <span>${d.modifier}</span>
                 </div>
                 <div class="item-right">
-                    <span class="timer" id="timer-${id}"></span>
+                    <span>${d.modifier}</span>
                 </div>
             </div>
         `;
-        container.innerHTML += n;
-        startTimer(id, Date.parse(sortie.expiry));
     });
+    nsub += '</div>';
+    container.innerHTML += nsub;
 };
