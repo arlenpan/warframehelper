@@ -22,6 +22,7 @@ const addUIListeners = () => {
     // header
     document.getElementById('header-image').addEventListener('click', e => {
         chrome.tabs.create({ url: URL_REDDIT });
+        ga('send', 'event', 'header-image', 'clicked');
     });
 
     // search bar
@@ -50,27 +51,29 @@ const addUIListeners = () => {
         node.addEventListener('change', e => {
             chrome.storage.sync.set({ [STORAGE_SOURCE]: e.target.value });
             chrome.runtime.sendMessage({ msg: ALARM_UPDATE });
+            ga('send', 'event', 'toggle-platform', 'change', e.target.value);
         });
     });
 
     // toggle sound and notifications
     document.getElementById('toggle-sound').addEventListener('change', e => {
         chrome.storage.sync.set({ [STORAGE_SOUND]: e.target.checked });
-    });
-    document.querySelectorAll('input.toggle-notification').forEach(node => {
-        node.addEventListener('change', e => {
-            chrome.storage.sync.set({ [node.dataset.type]: e.target.checked });
-        });
+        ga('send', 'event', 'toggle-sound', 'change', e.target.checked);
     });
     document.querySelectorAll('button.toggle-notification').forEach(node => {
         node.addEventListener('click', e => {
             toggleAllNotifications(node.dataset.toggle);
+            ga('send', 'event', 'toggle-notifications-all', 'clicked', node.dataset.toggle);
         });
     });
 
     // links
     document.querySelectorAll('.settings-header a').forEach(n => n.addEventListener('click', e => {
         chrome.tabs.create({ url: e.target.href });
+        ga('send', 'event', 'settings-links', 'clicked', e.target.href);
+    }));
+    document.querySelectorAll('#container-links a').forEach(n => n.addEventListener('click', e => {
+        ga('send', 'event', 'quicklinks', 'clicked', e.target.href);
     }));
 };
 
@@ -86,6 +89,7 @@ const onSearchHandler = () => {
     const t = document.getElementById('input-search').value;
     const url = `http://warframe.wikia.com/wiki/Special:Search?search=${t}&fulltext=Search`;
     chrome.tabs.create({ url });
+    ga('send', 'event', 'input-search', 'search', t);
 };
 
 const addDataListener = () => {
