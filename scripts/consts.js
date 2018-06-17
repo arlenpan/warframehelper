@@ -10,9 +10,10 @@ export const NOTIFICATIONS = {
     n_alerts: true,
     n_invasions: false,
     n_fissures: false,
-    n_sortie: false,
-    n_dailydeal: false,
-    n_voidtrader: false
+    // n_sortie: false,
+    // n_dailydeal: false,
+    // n_voidtrader: false,
+    // n_news: false
 };
 
 export const STORAGE_SOURCE = 'storage.source';

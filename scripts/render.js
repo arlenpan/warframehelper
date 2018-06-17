@@ -13,25 +13,24 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
         let hourText = hours ? `${hours}h ` : '';
         let minText = minutes ? `${minutes}m ` : '';
         if (el) {
-            if (notStarted) {
+            if (notStarted && el.className != 'timer gray') {
                 el.className = 'timer gray';
             }
-            if (timeLeft < (10 * 60) && el.className != 'timer red') {
+            if (timeLeft < 600 && el.className != 'timer red') {
                 el.className = 'timer red';
             }
             if (timeLeft > 0) {
                 let beginText = notStarted ? 'begins in ' : '';
                 el.innerHTML = `${beginText}${dayText}${hourText}${minText}${seconds}s`;
+                timeLeft -= 1;
             } else {
-                el.innerHTML = 'expired';
-            }
-        }
-        if (timeLeft > 0) {
-            timeLeft -= 1;
-        } else {
-            if (notStarted) {
-                timeLeft = timeExpiry;
-                notStarted = false;
+                if (notStarted) {
+                    timeLeft = timeExpiry;
+                    notStarted = false;
+                    el.className = 'timer';
+                } else {
+                    el.innerHTML = 'expired';
+                }
             }
         }
     };
@@ -129,8 +128,7 @@ export const renderFissures = /* object */ fissures => {
 
 export const renderSortie = /* object */ sortie => {
     const container = document.getElementById('list-sortie');
-    container.innerHTML = '';
-    container.innerHTML += `
+    container.innerHTML = `
         <div class="item flex-row mb-0">
             <div class="item-left">
                 <h4>${sortie.boss} (${sortie.faction})</h4>
@@ -184,8 +182,7 @@ export const renderDailyDeal = /* array */ dailyDeal => {
 
 export const renderVoidTrader = /* object */ voidTrader => {
     const container = document.getElementById('list-voidtrader');
-    container.innerHTML = '';
-    container.innerHTML += `
+    container.innerHTML = `
         <div class="item flex-row mb-0">
             <div class="item-left">
                 <h4>${voidTrader.character}</h4>
@@ -228,4 +225,37 @@ export const renderVoidTrader = /* object */ voidTrader => {
         container.innerHTML += nsub;
     }
     startTimer(voidTrader.id, Date.parse(voidTrader.expiry), Date.parse(voidTrader.activation));
+};
+
+export const renderNews = /* object */ news => {
+    const container = document.getElementById('list-news');
+    let n = `<div class="item-list">`;
+    news.reverse().map(d => {
+        let title;
+        let locale = window.navigator.languages;
+        locale.map(l => {
+            if (l in d.translations) {
+                title = d.translations[l];
+            }
+        });
+        if (!title) {
+            title = d.translations[Object.keys(d.translations)[0]];
+        }
+        let etaString = d.eta.split(' ').slice(0, 2).join(' ');
+        n += `
+            <div class="item-list-item flex-row">
+                <div class="item-left">
+                    <a href="${d.link}">${title}</a>
+                </div>
+                <div class="item-right">
+                    <span>${etaString} ago</span>
+                </div>
+            </div>
+        `;
+    });
+    n += '</div>';
+    container.innerHTML = n;
+    document.querySelectorAll('#list-news a').forEach(n => n.addEventListener('click', e => {
+        chrome.tabs.create({ url: e.target.href });
+    }));
 };

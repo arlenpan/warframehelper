@@ -130,17 +130,4 @@ const getDiff = (/* array */ newArr, /* array */ oldArr) => {
     return newArr.filter(a => !b.includes(a.id));
 };
 
-// map arrays with ids to objects
-const mapArrayToDict = (/* obj */ data, /* string */ keys) => {
-    let d = Object.assign({}, data);
-    keys.map(key => {
-        let a = {};
-        data[key].map(x => {
-            a[x.id] = x;
-        });
-        d[key] = a;
-    });
-    return d;
-};
-
 export { update };

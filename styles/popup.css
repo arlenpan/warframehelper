@@ -31,6 +31,12 @@ header img {
 	width: 64px;
 	height: 64px;
 }
+footer {
+	margin-top: 1rem;
+}
+a {
+	color: slategray;
+}
 
 /* searchbar */
 #search {

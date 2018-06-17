@@ -105,6 +105,7 @@ const updateView = () => {
         render.renderFissures(r.fissures);
         render.renderVoidTrader(r.voidTrader);
         render.renderSortie(r.sortie);
+        render.renderNews(r.news);
     });
     bindNotificationsSettings();
 };
