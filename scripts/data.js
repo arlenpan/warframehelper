@@ -27,7 +27,7 @@ const update = () => {
     });
 };
 
-const checkNewNotification = (/* array */ newData, /* array */ oldData, /* string */ key) => {
+const checkNewNotification = (/* obj */ newData, /* obj */ oldData, /* string */ key) => {
     let diff = getDiff(newData[key], oldData[key]);
     if (diff.length > 0) console.log(`new ${key}`, diff);
     if (diff.length == 1) {
@@ -44,6 +44,7 @@ const checkNewNotification = (/* array */ newData, /* array */ oldData, /* strin
             case 'fissures': desc = `${diff[0].tierName} (${diff[0].tier})`;
         }
         createNotification({
+            key: key,
             type: key.charAt(0).toUpperCase() + key.slice(1, -1),
             title: diff[0].name,
             mission: diff[0].type,
@@ -66,6 +67,7 @@ const parseAlerts = /* array */ alerts => {
         rString:    alert.mission.reward.asString,
         credits:    alert.mission.reward.credits,
         expiry:     Date.parse(alert.expiry),
+        activation: Date.parse(alert.activation),
         expired:    alert.expired
     }));
 };
@@ -97,6 +99,7 @@ const parseFissures = /* array */ fissures => {
         name:       fissure.node,
         type:       fissure.missionType,
         expiry:     Date.parse(fissure.expiry),
+        activation: Date.parse(fissure.activation),
         expired:    fissure.expired,
         tierName:   fissure.tier,
         tier:       VOID_TIERS[fissure.tier],

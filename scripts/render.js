@@ -1,7 +1,8 @@
 const startTimer = (id, /* date */ expiry, /* date */ start) => {
     let timeStart = (start) ? (start - Date.now()) / 1000 : null;
     let timeExpiry = (expiry) ? (expiry - Date.now()) / 1000 : null;
-    let timeLeft = timeExpiry;
+    let timeLeft = (timeStart && timeStart > 0) ? timeStart : timeExpiry;
+    let notStarted = (timeStart && timeStart > 0);
     const timer = () => {
         let el = document.getElementById(`timer-${id}`);
         let days = (timeLeft) / (3600 * 24) | 0;
@@ -12,16 +13,27 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
         let hourText = hours ? `${hours}h ` : '';
         let minText = minutes ? `${minutes}m ` : '';
         if (el) {
+            if (notStarted) {
+                el.className = 'timer gray';
+            }
             if (timeLeft < (10 * 60) && el.className != 'timer red') {
                 el.className = 'timer red';
             }
             if (timeLeft > 0) {
-                el.innerHTML = `${dayText}${hourText}${minText}${seconds}s`;
+                let beginText = notStarted ? 'begins in ' : '';
+                el.innerHTML = `${beginText}${dayText}${hourText}${minText}${seconds}s`;
             } else {
                 el.innerHTML = 'expired';
             }
         }
-        if (timeLeft > 0) timeLeft -= 1;
+        if (timeLeft > 0) {
+            timeLeft -= 1;
+        } else {
+            if (notStarted) {
+                timeLeft = timeExpiry;
+                notStarted = false;
+            }
+        }
     };
     timer();
     setInterval(timer, 1000);
@@ -66,7 +78,7 @@ export const renderAlerts = /* array */ alerts => {
                 </div>
             </div>
         `;
-        startTimer(d.id, d.expiry);
+        startTimer(d.id, d.expiry, d.activation);
     });
 };
 
@@ -111,7 +123,7 @@ export const renderFissures = /* object */ fissures => {
                 </div>
             </div>
         `;
-        startTimer(d.id, d.expiry);
+        startTimer(d.id, d.expiry, d.activation);
     });
 };
 
@@ -128,7 +140,7 @@ export const renderSortie = /* object */ sortie => {
             </div>
         </div>
     `;
-    startTimer(sortie.id, Date.parse(sortie.expiry));
+    startTimer(sortie.id, Date.parse(sortie.expiry), Date.parse(sortie.activation));
 
     let nsub = '<div class="item-list">';
     sortie.variants.map((d,i) => {
@@ -185,7 +197,7 @@ export const renderVoidTrader = /* object */ voidTrader => {
         </div>
     `;
 
-    if (voidTrader.inventory) {
+    if (voidTrader.inventory.length > 0) {
         let nsub = `
             <div class="item-list" id="list-${voidTrader.id}">
                 <div class="item-list-item flex-row">
@@ -215,7 +227,5 @@ export const renderVoidTrader = /* object */ voidTrader => {
         nsub += '</div>';
         container.innerHTML += nsub;
     }
-    const dAct = Date.parse(voidTrader.activation);
-    let d = (dAct - Date.now() > 0) ? dAct : Date.parse(voidTrader.expiry);
-    startTimer(voidTrader.id, d);
+    startTimer(voidTrader.id, Date.parse(voidTrader.expiry), Date.parse(voidTrader.activation));
 };

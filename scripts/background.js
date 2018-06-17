@@ -1,9 +1,11 @@
-import { DELAY_IN_MINUTES, PERIOD_IN_MINUTES, ALARM_UPDATE, STORAGE_DEFAULTS, STORAGE_NOTIFICATIONS, STORAGE_SOUND } from './consts.js';
+import { DELAY_IN_MINUTES, PERIOD_IN_MINUTES, ALARM_UPDATE, STORAGE_DEFAULTS, STORAGE_SOUND } from './consts.js';
 import { update } from './data.js';
 
 const createNotification = notif => {
-    chrome.storage.sync.get([STORAGE_NOTIFICATIONS, STORAGE_SOUND], res => {
-        if (res[STORAGE_NOTIFICATIONS]) {
+    console.log('creating notification', notif);
+    const storage_key = 'n_' + notif.key;
+    chrome.storage.sync.get([storage_key, STORAGE_SOUND], res => {
+        if (res[storage_key]) {
             chrome.notifications.create({
                 type: 'basic', 
                 title: `Warframe Helper: New ${notif.type}`,
@@ -14,19 +16,23 @@ const createNotification = notif => {
                     new Audio('./assets/notif.mp3').play();
                 }
             });
+        } else {
+            console.log(`notification ${storage_key} disabled`);
         }
     });
 };
 
 // assigns default values to chrome.storage.sync - see consts for defaults
 const assignDefaultStorage = () => {
-    for (let key in STORAGE_DEFAULTS) {
-        chrome.storage.sync.get(key, res => {
-            if (!res.key) {
-                chrome.storage.sync.set({ [key]: STORAGE_DEFAULTS[key] });
+    chrome.storage.sync.get(Object.keys(STORAGE_DEFAULTS), res => {
+        let query = {};
+        for (let key in STORAGE_DEFAULTS) {
+            if (res[key] === undefined) {
+                query[key] = STORAGE_DEFAULTS[key];
             }
-        });
-    }
+        }
+        chrome.storage.sync.set(query);
+    });
 };
 
 const createAlarm = () => {

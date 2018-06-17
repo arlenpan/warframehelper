@@ -17,7 +17,6 @@ export const NOTIFICATIONS = {
 
 export const STORAGE_SOURCE = 'storage.source';
 export const STORAGE_SOUND = 'storage.sound';
-export const STORAGE_NOTIFICATIONS = 'storage.notifications';
 export const STORAGE_DATA = 'storage.data';
 export const STORAGE_DEFAULTS = Object.assign({
     [STORAGE_SOURCE]: PLATFORM_PC,
