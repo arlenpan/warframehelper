@@ -13,11 +13,11 @@ const startTimer = (id, /* date */ expiry, /* date */ start) => {
         let hourText = hours ? `${hours}h ` : '';
         let minText = minutes ? `${minutes}m ` : '';
         if (el) {
-            if (notStarted && el.className != 'timer gray') {
-                el.className = 'timer gray';
-            }
             if (timeLeft < 600 && el.className != 'timer red') {
                 el.className = 'timer red';
+            }
+            if (notStarted && el.className != 'timer gray') {
+                el.className = 'timer gray';
             }
             if (timeLeft > 0) {
                 let beginText = notStarted ? 'begins in ' : '';
