@@ -35,6 +35,28 @@ a {
 a:hover {
 	color: lightgray;
 }
+a:active {
+	color: darkgray;
+}
+button {
+	flex: 1;
+	border: none;
+	background-color: darkgray;
+	color: white;
+	outline: none;
+	transition: background-color 0.3s;
+	cursor: pointer;
+}
+button:hover {
+	background-color: gray;
+}
+button:active {
+	background-color: lightgray;
+}
+button:disabled {
+	background-color: lightgray;
+	cursor: auto;
+}
 
 /* searchbar */
 #search {
@@ -44,28 +66,23 @@ a:hover {
 	flex: 90%;
 	padding: 0.5rem;
 	outline: none;
-	border: solid 1px lightgray;
+	border: solid 1px darkgray;
 	transition: border 0.3s;
 }
-#input-search:focus {
+#input-search:focus, #input-search:hover {
 	border: solid 1px gray;
 }
-#input-search:focus + #button-search {
+#input-search:focus + #button-search, #input-search:hover + #button-search {
 	background-color: gray;
-}
-#button-search {
-	flex: 1;
-	border: none;
-	background-color: lightgray;
-	color: white;
-	outline: none;
-	transition: background-color 0.3s;
-	cursor: pointer;
 }
 
 /*containers*/
 .section-container {
 	margin: 2rem 0;
+}
+.section-container.dotted {
+    border: 2px dashed lightgray;
+    padding: 1rem;
 }
 
 /* items */
@@ -136,6 +153,9 @@ a:hover {
 #settings-container > * {
 	margin: 0.25rem 0;
 }
+.link-options {
+	font-size: 0.70%;
+}
 
 /*scrollbar*/
 ::-webkit-scrollbar {
@@ -155,6 +175,10 @@ a:hover {
 .flex-column {
 	display: flex;
 	flex-direction: column;
+}
+.flex-end {
+	display: flex;
+	justify-content: flex-end;
 }
 .mb-0 {
 	margin-bottom: 0;

@@ -65,7 +65,7 @@ export const renderAlerts = /* array */ alerts => {
         container.innerHTML  += `
             <div class="item flex-row" id="item-${d.id}">
                 <div class="item-left">
-                    <h4>${d.name} - ${d.type} (<span>Level ${d.min}-${d.max}</span>)</h4>
+                    <h4>${d.name} - ${d.nightmare ? 'Nightmare' : ''} ${d.type} (<span>Level ${d.min}-${d.max}</span>)</h4>
                     <div class="item-detail">
                         <span>${d.faction}</span>
                         ${d.rewardItem ? `<span class="tag reward">${d.rewardItem}</span>` : ''}

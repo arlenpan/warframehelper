@@ -20,6 +20,16 @@ const bindOptionsData = () => {
     });
 };
 
+const addDataListeners = () => {
+    chrome.storage.onChanged.addListener(changes => {
+        if (changes[STORAGE_CUSTOM_RULES] || changes[STORAGE_CUSTOM_RULES_LIST]) {
+            chrome.storage.sync.get([STORAGE_CUSTOM_RULES, STORAGE_CUSTOM_RULES_LIST], res => {
+                renderCustomRules(res[STORAGE_CUSTOM_RULES_LIST], res[STORAGE_CUSTOM_RULES]);
+            });
+        }
+    });
+};
+
 const addUIListeners = () => {
     // toggle sound
     document.getElementById('toggle-sound').addEventListener('change', e => {
@@ -62,16 +72,6 @@ const addUIListeners = () => {
 
 const sanitizeRule = val => {
     return val.replace(/[^\w\s]/gi, '');
-};
-
-const addDataListeners = () => {
-    chrome.storage.onChanged.addListener(changes => {
-        if (changes[STORAGE_CUSTOM_RULES] || changes[STORAGE_CUSTOM_RULES_LIST]) {
-            chrome.storage.sync.get([STORAGE_CUSTOM_RULES, STORAGE_CUSTOM_RULES_LIST], res => {
-                renderCustomRules(res[STORAGE_CUSTOM_RULES_LIST], res[STORAGE_CUSTOM_RULES]);
-            });
-        }
-    });
 };
 
 const toggleAllNotifications = enable => {

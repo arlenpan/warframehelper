@@ -64,12 +64,15 @@ const addUIListeners = () => {
     }));
 
     // options page
-    document.getElementById('link-options').addEventListener('click', e => {
-        if (chrome.runtime.openOptionsPage) {
-            chrome.runtime.openOptionsPage();
-        } else {
-            window.open(chrome.runtime.getURL('options.html'));
-        }
+    document.querySelectorAll('.link-options').forEach(node => {
+        node.addEventListener('click', e => {
+            e.preventDefault();
+            if (chrome.runtime.openOptionsPage) {
+                chrome.runtime.openOptionsPage();
+            } else {
+                window.open(chrome.runtime.getURL('options.html'));
+            }
+        });
     });
 };
 

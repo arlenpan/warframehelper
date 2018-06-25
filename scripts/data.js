@@ -1,5 +1,5 @@
 import { STORAGE_SOURCE, STORAGE_DATA, URLS, VOID_TIERS } from './consts.js';
-import { createNotification } from './background.js';
+import { createNotification } from './notifications.js';
 
 const update = () => {
     console.log('===== Update called! =====');

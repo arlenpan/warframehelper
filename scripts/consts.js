@@ -24,7 +24,10 @@ export const STORAGE_CUSTOM_RULES = 'storage.custom-rules';
 export const STORAGE_CUSTOM_RULES_LIST = 'storage.custom-rules-list';
 export const STORAGE_DEFAULTS = Object.assign({
     [STORAGE_SOURCE]: PLATFORM_PC,
-    [STORAGE_SOUND]: false
+    [STORAGE_SOUND]: false,
+    [STORAGE_DISABLED_FILTERS]: {},
+    [STORAGE_CUSTOM_RULES]: false,
+    [STORAGE_CUSTOM_RULES_LIST]: {}
 }, NOTIFICATIONS);
 
 export const URLS = {};
