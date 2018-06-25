@@ -14,6 +14,8 @@ Warframe Helper is a Chrome extension that helps you keep track of new alerts an
 
 - [ ] marking items as complete
 
-- [ ] specific notification filtering
+- [ ] filter notifications by reward
 
 - [ ] notification support for other categories
+
+- [ ] nightmare alerts

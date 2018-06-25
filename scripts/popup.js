@@ -2,19 +2,19 @@ import { STORAGE_SOURCE, STORAGE_SOUND, NOTIFICATIONS, STORAGE_DATA, ALARM_UPDAT
 import * as render from './render.js';
 
 const bindSettingsData = () => {
-    chrome.storage.sync.get([STORAGE_SOURCE, STORAGE_SOUND], res => {
+    chrome.storage.sync.get(STORAGE_SOURCE, res => {
         document.querySelectorAll('#toggle-platform input[type=radio]').forEach(node => {
             node.checked = (node.value == res[STORAGE_SOURCE]);
         });
-        document.getElementById('toggle-sound').checked = res[STORAGE_SOUND];
     });
 };
 
-const bindNotificationsSettings = () => {
-    chrome.storage.sync.get(Object.keys(NOTIFICATIONS), res => {
+const bindPopupData = () => {
+    chrome.storage.sync.get([STORAGE_SOURCE, ...Object.keys(NOTIFICATIONS)], res => {
         document.querySelectorAll('input.toggle-notification').forEach(node => {
             node.checked = res[node.dataset.type];
         });
+        document.getElementById('container-source').innerHTML = res[STORAGE_SOURCE].toUpperCase();
     });
 };
 
@@ -32,7 +32,6 @@ const addUIListeners = () => {
     document.getElementById('input-search').addEventListener('keyup', e => {
         if (e.keyCode == 13) onSearchHandler();
     });
-
 
     // settings button
     let settingsContainer = document.getElementById('settings-container');
@@ -55,18 +54,6 @@ const addUIListeners = () => {
         });
     });
 
-    // toggle sound and notifications
-    document.getElementById('toggle-sound').addEventListener('change', e => {
-        chrome.storage.sync.set({ [STORAGE_SOUND]: e.target.checked });
-        ga('send', 'event', 'toggle-sound', 'change', e.target.checked);
-    });
-    document.querySelectorAll('button.toggle-notification').forEach(node => {
-        node.addEventListener('click', e => {
-            toggleAllNotifications(node.dataset.toggle);
-            ga('send', 'event', 'toggle-notifications-all', 'clicked', node.dataset.toggle);
-        });
-    });
-
     // links
     document.querySelectorAll('.settings-header a').forEach(n => n.addEventListener('click', e => {
         chrome.tabs.create({ url: e.target.href });
@@ -75,14 +62,15 @@ const addUIListeners = () => {
     document.querySelectorAll('#container-links a').forEach(n => n.addEventListener('click', e => {
         ga('send', 'event', 'quicklinks', 'clicked', e.target.href);
     }));
-};
 
-const toggleAllNotifications = enable => {
-    let query = Object.assign({}, NOTIFICATIONS);
-    for (let key in query) {
-        query[key] = enable == 'true';
-    }
-    chrome.storage.sync.set(query);
+    // options page
+    document.getElementById('link-options').addEventListener('click', e => {
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
 };
 
 const onSearchHandler = () => {
@@ -92,7 +80,7 @@ const onSearchHandler = () => {
     ga('send', 'event', 'input-search', 'search', t);
 };
 
-const addDataListener = () => {
+const addDataListeners = () => {
     chrome.storage.onChanged.addListener(changes => {
         console.log('changes', changes);
         updateView();
@@ -111,7 +99,7 @@ const updateView = () => {
         render.renderSortie(r.sortie);
         render.renderNews(r.news);
     });
-    bindNotificationsSettings();
+    bindPopupData();
 };
 
 const initialize = () => {
@@ -119,6 +107,6 @@ const initialize = () => {
     updateView();
 };
 
-addDataListener();
+addDataListeners();
 addUIListeners();
 initialize();

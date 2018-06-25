@@ -20,13 +20,6 @@ header > div:first-child, header > div:last-child {
 header > div:last-child {
 	text-align: right;
 }
-header > div:last-child a {
-	color: gray;
-	transition: 0.3s;
-}
-header > div:last-child a:hover {
-	color: darkgray;
-}
 header img {
 	width: 64px;
 	height: 64px;
@@ -36,7 +29,11 @@ footer {
 	margin-top: 1rem;
 }
 a {
-	color: slategray;
+	color: gray;
+	transition: .33s;
+}
+a:hover {
+	color: lightgray;
 }
 
 /* searchbar */
@@ -135,6 +132,9 @@ a {
 	align-items: flex-end;
 	flex-direction: column;
 	padding-top: 1rem;
+}
+#settings-container > * {
+	margin: 0.25rem 0;
 }
 
 /*scrollbar*/

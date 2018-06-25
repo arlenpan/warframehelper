@@ -13,6 +13,7 @@
 		<div class="flex-column" id="container-cycles"></div>
 		<img id="header-image" src="/images/icon-128.png">
 		<div class="flex-column" id="container-links">
+			<span>Selected Platform: <span id="container-source"></span></span>
 			<div>
 				<span>Quicklinks: </span>
 				<a href="#container-alerts">Alerts</a>
@@ -127,16 +128,8 @@
 					XB1 <input type="radio" name="toggle-platform" value="xb1"/>
 				</label>
 			</form>
-			
-			<label for="toggle-sound">
-				Sound <input type="checkbox" id="toggle-sound" name="toggle-sound" value="sound"/>
-			</label>
-			
-			<span>
-				<label>Notifications:</label>
-				<button type="button" class="toggle-notification" data-toggle="false">Disable all</button>
-				<button type="button" class="toggle-notification" data-toggle="true">Enable all</button>
-			</span>
+
+			<button type="button" id="link-options">Customize Notifications</button>
 		</div>
 	</footer>
 

@@ -1,0 +1,15 @@
+body {
+    width: auto;
+}
+h4 {
+    margin-bottom: 0.5rem;
+}
+.section-container {
+    margin: 1rem 0;
+	display: flex;
+	flex-direction: column;
+}
+.section-container.dotted {
+    border: 2px dashed lightgray;
+    padding: 1rem;
+}

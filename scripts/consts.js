@@ -19,6 +19,9 @@ export const NOTIFICATIONS = {
 export const STORAGE_SOURCE = 'storage.source';
 export const STORAGE_SOUND = 'storage.sound';
 export const STORAGE_DATA = 'storage.data';
+export const STORAGE_DISABLED_FILTERS = 'storage.disabled-filters';
+export const STORAGE_CUSTOM_RULES = 'storage.custom-rules';
+export const STORAGE_CUSTOM_RULES_LIST = 'storage.custom-rules-list';
 export const STORAGE_DEFAULTS = Object.assign({
     [STORAGE_SOURCE]: PLATFORM_PC,
     [STORAGE_SOUND]: false

@@ -54,7 +54,7 @@ const checkNewNotification = (/* obj */ newData, /* obj */ oldData, /* string */
 };
 
 const parseAlerts = /* array */ alerts => {
-    // console.log('parsing alerts', alerts);
+    console.log('parsing alerts', alerts);
     return alerts.map(alert => ({
         id:         alert.id,
         name:       alert.mission.node,
@@ -73,7 +73,7 @@ const parseAlerts = /* array */ alerts => {
 };
 
 const parseInvasions = /* array */ invasions => {
-    // console.log('parsing invasions', invasions);
+    console.log('parsing invasions', invasions);
     return invasions.map(invasion => ({
         id:         invasion.id,
         name:       invasion.node,

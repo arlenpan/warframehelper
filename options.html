@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="styles/popup.css">
+<link rel="stylesheet" href="styles/options.css">
+
+<div id="options-page">
+    <div class="section-container">
+        <h4>All Notifications</h4>
+        <span>
+            <button type="button" class="toggle-notification" data-toggle="false">Disable all notifications</button>
+            <button type="button" class="toggle-notification" data-toggle="true">Enable all notifications</button>
+        </span>
+        <label for="toggle-sound">
+            <input type="checkbox" id="toggle-sound" /> Sound 
+        </label>
+    </div>
+
+    <div class="section-container">
+        <h4>Filter Alert Notifications</h4>
+        <label for="disable-filter-credits">
+            <input type="checkbox" id="disable-filter-credits" class="disable-filter" data-type="credits" /> Disable credit-only alerts 
+        </label>
+        <label for="disable-filter-endo">
+            <input type="checkbox" id="disable-filter-endo" class="disable-filter" data-type="endo" /> Disable endo alerts 
+        </label>
+    </div>
+
+    <div class="section-container dotted">
+        <h4>Experimental: Custom Alert Notification Filtering</h4>
+        <small>*If enabled, custom rules will disable ALL Alert notifications except ones that have rewards that contain any of the words in this list.</small>
+        <label for="toggle-custom-rules">
+            <input type="checkbox" id="toggle-custom-rules" /> Enable Custom Rules
+        </label>
+        <div class="item-list" id="list-custom-rules"></div>
+        <span>
+            <input type="text" id="input-custom-rules" />
+            <button type="button" id="submit-custom-rules">New Rule</button>
+        </span>
+    </div>
+
+    <div class="section-container">
+        <h4>Filter Invasion Notifications</h4>
+        <label for="disable-filter-fieldron">
+            <input type="checkbox" id="disable-filter-fieldron" class="disable-filter" data-type="fieldron" /> Disable fieldron alerts
+        </label>
+        <label for="disable-filter-detonite">
+            <input type="checkbox" id="disable-filter-detonite" class="disable-filter" data-type="detonite" /> Disable detonite injector alerts 
+        </label>
+        <label for="disable-filter-mutagen">
+            <input type="checkbox" id="disable-filter-mutagen" class="disable-filter" data-type="mutagen" /> Disable mutagen mass alerts 
+        </label>
+        <label for="disable-filter-coordinate">
+            <input type="checkbox" id="disable-filter-coordinate" class="disable-filter" data-type="coordinate" /> Disable mutalist coordinate 
+        </label>
+    </div>
+</div>
+
+
+<script type="module" src="./scripts/options.js"></script>

@@ -28,6 +28,9 @@
 	  "storage"
   ],
 
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js; object-src 'self'"
-
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js; object-src 'self'",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false 
+  }
 }
